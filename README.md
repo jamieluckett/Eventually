@@ -1,2 +1,1 @@
-# Eventually
-Final Year Project
+![Eventually](Logo.png"Logo Title Text 1")
