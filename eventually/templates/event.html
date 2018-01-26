@@ -1,0 +1,18 @@
+<!-- \templates\event.html -->
+
+{% load staticfiles %}
+{% block content %}
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/event.css' %}">
+	</head>
+	<div class="event-entry">
+	<h1>Event Details<h1>
+		<h2>{{ event.event_name }}</h2>
+	<p><b>Date:</b> {{ event.event_date }}</p>
+	<p><b>Date Created:</b> {{ event.event_date_created }}</p>
+		<p><b>Key:</b> {{ event.event_key }}</p>
+	</div>
+</html>
+
+{% endblock content %}

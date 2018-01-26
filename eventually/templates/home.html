@@ -1,0 +1,7 @@
+<!-- \templates\home.html -->
+<h1>Event List</h1>
+<ul>
+  {% for event in object_list %}
+	<p><a href="{% url 'event_detail' event.pk %}">{{ event }}</a></p>
+  {% endfor %}
+</ul>
