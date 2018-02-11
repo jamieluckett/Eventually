@@ -9,7 +9,11 @@
 			<h2>{{ event.event_name }}</h2>
 			<p><b>Date:</b> {{ event.event_date }}</p>
 			<p><b>Date Created:</b> {{ event.event_date_created }}</p>
-			<p><b>Key:</b> {{ event.event_key }}</p>
 		</div>
+
+		<h3>Guest List</h3>
+		{% for g in guest %}
+			<b><p>{{ g.email_models }}</b> - {% if g.going %} Going {% else %} Not Going {% endif %}
+		{% endfor %}
 	{% endblock %}
 </html>

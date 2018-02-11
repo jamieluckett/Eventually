@@ -1,7 +1,6 @@
 #\event\views.py
 
-from django.shortcuts import render
-from django.views.generic import ListView, FormView, DetailView, CreateView
+from django.views.generic import ListView, FormView, DetailView, CreateView, TemplateView
 from django.core.validators import validate_email
 from .models import Event, Guest, EventLine
 from .forms import *
@@ -39,6 +38,7 @@ class NewEventView(FormView):
         #emails
         email_list = form['event_guests'].value().replace(' ','') #remove spaces
         email_list = email_list.split(',') #create list
+        print(email_list)
         valid_emails = [i for i in email_list if is_email(i)] #remove invalid emails
         print("emails:", valid_emails)
 
@@ -46,13 +46,20 @@ class NewEventView(FormView):
         event_line_ids = []
 
         for address in valid_emails:
-            new_guest = Guest(email_models = address) #naive, creating new guest atm
-            new_guest.save()
-            guest_ids.append(new_guest.id)
-            #TODO Stop new guests being created every time
-            new_event_line = EventLine(event_id = new_event, guest_id = new_guest)
-            new_event_line.save()
-            event_line_ids.append(new_event_line.id)
+            if Guest.objects.filter(email_models = address).exists(): #guest exists
+                new_guest = list(Guest.objects.filter(email_models = address))[0]
+            else:
+                new_guest = Guest(email_models = address) #creating new guest
+                new_guest.save()
+
+            if EventLine.objects.filter(guest_id = new_guest.id).filter(event_id = new_event.id).exists(): #eventline already exists
+                print(new_guest,"already has EventLine with this event")
+            else:
+                print("making eventline")
+                guest_ids.append(new_guest.id)
+                new_event_line = EventLine(event_id = new_event, guest_id = new_guest)
+                new_event_line.save()
+                event_line_ids.append(new_event_line.id)
         print("Event Created")
         print("Event ID:",new_event.id,
               "\nGuest IDs:", guest_ids,
@@ -73,26 +80,39 @@ class EditEventView(CreateView):
         new_event.event_name = form['event_name']
         new_event.save()
 
-        print("event saved")
-
         return super().form_valid(form)
 
 class EventDetailView(DetailView):
     model = Event
-    print(model)
     template_name = "event.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # using a sql statement here over django queries because i find them easier to write + read
+        sql_query = ("""SELECT *
+FROM event_guest
+INNER JOIN event_eventline ON event_guest.id =event_eventline.guest_id_id
+WHERE event_eventline.event_id_id = """ + str(context['object'].id)).replace("\n", " ")
+        #SELECT all Guest objects linked to this Event via EventLine
+        print("Query\n\n", sql_query)
+        context['guest'] = Guest.objects.raw(sql_query) #add guests to context for template to use
+        return context
 
 class EventDetailRespondView(DetailView):
     model = Event
     template_name = "event.html"
 
-class GuestView(ListView):
-    model = Guest.objects.raw('SELECT *'
-                              'FROM event_guest'
-                              'INNER JOIN event_eventline ON event_guest.id =event_eventline.guest_id_id'
-                              'WHERE event_eventline.event_id_id = 22')
-    template_name = "event.html"
-    #TODO: Finish Event View with Details
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # using a sql statement here over django queries because i find them easier to write + read
+        sql_query = ("""SELECT *
+FROM event_guest
+INNER JOIN event_eventline ON event_guest.id =event_eventline.guest_id_id
+WHERE event_eventline.event_id_id = """ + str(context['object'].id)).replace("\n", " ")
+        #SELECT all Guest objects linked to this Event via EventLine
+        print("Query\n\n", sql_query)
+        context['guest'] = Guest.objects.raw(sql_query) #add guests to context for template to use
+        return context
 
 class EnterKeyFormView(FormView):
     template_name = "key.html"
