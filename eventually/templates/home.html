@@ -1,7 +1,17 @@
 <!-- \templates\home.html -->
-<h1>Event List</h1>
-<ul>
-  {% for event in object_list %}
-	<p><a href="{% url 'event_detail' event.pk %}">{{ event }}</a></p>
-  {% endfor %}
-</ul>
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+<html>
+	{% block content %}
+		<title>Eventually</title>
+	<p></p>
+		<img src="{% static "img/logo.png"%}" style width=60%>
+		<h2>Event List</h2>
+		<ul>
+			{% for event in object_list %}
+			<p><a href="{% url 'event_detail' event.pk %}">{{ event }}</a></p>
+			{% endfor %}
+		</ul>
+	{% endblock %}
+</html>
