@@ -27,7 +27,7 @@ SECRET_KEY = '4g^(k+@gys+q+bt+-0!pa^q211%e!v^$^cd7^lz)oz9)@d1h$h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["192.168.0.15", "127.0.0.1", "0.0.0.0"]
+ALLOWED_HOSTS = ["192.168.0.15", "127.0.0.1", "0.0.0.0", "192.168.152.1", "192.168.44.1"]
 
 
 # Application definition
@@ -124,3 +124,4 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 DATE_INPUT_FORMATS = ['%Y-%m-%d', '%m/%d/%Y', '%m/%d/%y', '%Y/%m/%d', '%m/%d/%Y', '%m/%d/%Y']
+APPEND_SLASH = True

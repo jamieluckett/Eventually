@@ -1,23 +1,27 @@
-<!-- \templates\event.html -->
+<!-- \templates\invite.html -->
 
 {% extends 'base.html' %}
 <html>
 	{% block content %}
 		<title>Eventually - {{ event.event_name }} (Details)</title>
-		<h1>Event Details</h1>
-		<h4>Make sure to copy the url to keep the event!</h4>
-
-
+		<h2>You have been invited to:</h2>
 		<div class="event-entry">
 			<h2>{{ event.event_name }}</h2>
 			<p><b>Date:</b> {{ event.event_date }}</p>
 			<p><b>Date Created:</b> {{ event.event_date_created }}</p>
-			<p><b>Description:</b> {{ event.event_description }}</p>
 		</div>
 
-		<h5>Guest List</h5>
+		<h3>Guest List</h3>
 		{% for g in guest %}
 			<b><p>{{ g.email_models }}</b> - {% if g.going %} Going {% else %} Not Going {% endif %}
 		{% endfor %}
+		<p></p>
+
+			<form method="post" >
+			{% csrf_token %}
+			{{form.as_p}}
+			<button class="btn btn-success ml-2" type="submit">Save</button>
+		</form>
 	{% endblock %}
+
 </html>

@@ -21,6 +21,8 @@ class Event(models.Model):
     event_date_created = models.DateTimeField(default=datetime.now, blank=True)
     event_key = models.CharField(default = generate_key, max_length=config.EVENT_KEY_LENGTH)
     event_creator = models.CharField(max_length=75, help_text="Enter Your Name", default = "John Smith")
+    event_public = models.BooleanField(default=False, help_text="Whether the public can see this")
+    event_description = models.CharField(max_length = 250, default="")
         
     def __str__(self):
         """Overwrites the models string return to make admin view pretty"""
@@ -52,14 +54,17 @@ class EventLine(models.Model):
     going = models.BooleanField(default = False)
     seen = models.BooleanField(default = False)
     emailed = models.BooleanField(default = False)
-	key = models.CharField(default=generate_key, max_length=config.EVENT_KEY_LENGTH)
+    invite_key = models.CharField(default = generate_key, max_length=config.EVENT_KEY_LENGTH)
     
     def __str__(self):
         """Overwrites the models string return to make admin view pretty"""
-        return "E%s/G%s"%(str(self.event_id.id), str(self.guest_id.id))
-        
-    class Meta:
-        verbose_name_plural = "Pairings"
+        return "E%s/G%s - %s"%(str(self.event_id.id), str(self.guest_id.id), self.invite_key)
+
+    def setGoing(self, value):
+        self.going = value
+
+    def setSeen(self, value):
+        self.seen = value
 
 class InterestedLine(models.Model):
     event_id = models.ForeignKey(Event, on_delete=models.CASCADE)

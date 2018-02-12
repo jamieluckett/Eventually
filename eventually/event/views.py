@@ -1,10 +1,11 @@
 #\event\views.py
-
-from django.views.generic import ListView, FormView, DetailView, CreateView, TemplateView
+from django.shortcuts import redirect
+from django.views.generic import ListView, FormView, DetailView, CreateView, TemplateView, RedirectView
 from django.core.validators import validate_email
 from .models import Event, Guest, EventLine
 from .forms import *
 from datetime import datetime
+
 
 def get_url(key):
     return '1'
@@ -20,10 +21,11 @@ class HomePageView(ListView):
     model = Event
     template_name = 'home.html'
 
+
+
 class NewEventView(FormView):
     template_name = "new.html"
     form_class = EventForm
-
     success_url = '/admin'
 
     def form_valid(self, form):
@@ -86,6 +88,8 @@ class EventDetailView(DetailView):
     model = Event
     template_name = "event.html"
 
+    form_class = InviteForm
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # using a sql statement here over django queries because i find them easier to write + read
@@ -98,21 +102,83 @@ WHERE event_eventline.event_id_id = """ + str(context['object'].id)).replace("\n
         context['guest'] = Guest.objects.raw(sql_query) #add guests to context for template to use
         return context
 
-class EventDetailRespondView(DetailView):
+class YesNoView(FormView):
+    form_class = InviteForm
+    success_url = ""
+
+class EventDetailRespondView(FormView, DetailView):
+    template_name = "invite.html"
     model = Event
-    template_name = "event.html"
+    form_class = InviteForm
+    success_url = ""
+    event_line = None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # using a sql statement here over django queries because i find them easier to write + read
+        # Passed Key is self.kwargs['key']
+        # Check Key exists + is correct
+        print("Invite Key:", self.kwargs['key'])
+
         sql_query = ("""SELECT *
-FROM event_guest
-INNER JOIN event_eventline ON event_guest.id =event_eventline.guest_id_id
-WHERE event_eventline.event_id_id = """ + str(context['object'].id)).replace("\n", " ")
-        #SELECT all Guest objects linked to this Event via EventLine
-        print("Query\n\n", sql_query)
-        context['guest'] = Guest.objects.raw(sql_query) #add guests to context for template to use
+FROM event_event, event_eventline
+WHERE event_event.id = event_eventline.event_id_id AND event_eventline.invite_key = \"""" +
+                     str(self.kwargs['key']) +"\"").replace("\n", " ")
+
+        try:
+            #key belongs to an event
+            current_event_line = list(EventLine.objects.raw(sql_query))[0]
+            self.event_line = current_event_line
+            ##print(self.event_line)
+            if current_event_line.event_id.id != context['event'].id:
+                #Key does not belong to _this_ event
+                print("Key for incorrect event!!")
+                self.template_name = "incorrect_key.html"
+            else:
+                #Key is valid and belongs to this event
+                print("Key correct + belongs to this event")
+
+        except:
+            #Key is not a key for any event
+            print("Key doesn't belong to any events!! A liar!!!")
+            self.template_name = "incorrect_key.html"
+
+        # LOAD GUEST LIST
+        sql_query = ("""SELECT *
+    FROM event_guest
+    INNER JOIN event_eventline 
+    ON event_guest.id = event_eventline.guest_id_id
+    WHERE event_eventline.event_id_id = """ + str(context['object'].id)).replace("\n", " ")
+        # SELECT all Guest objects linked to this Event via EventLine
+        context['guest'] = Guest.objects.raw(sql_query)  # add guests to context for template to use
+        context['form'] = self.get_form()
+        context['event_line'] = current_event_line
         return context
+
+    def post(self, request, *args, **kwargs):
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        if form.is_valid():
+            return self.form_valid(form, **kwargs)
+        else:
+            return self.form_invalid(form, **kwargs)
+
+    def form_valid(self, form, **kwargs):
+        event_line = list(EventLine.objects.filter(invite_key = kwargs['key']))[0]
+        print(event_line)
+        if form.is_valid():
+            data = form.cleaned_data
+            user_going = bool(int(data['is_going']))
+            event_line.setGoing(user_going)
+            event_line.save(force_update = True)
+        else:
+            print("oh no")
+        return super().form_valid(form)
+
+    def get_success_url(self, *args, **kwargs):
+        print("get_success_url(self, *args, **kwargs)")
+        pk, key = self.kwargs['pk'], self.kwargs['key']
+        print(pk, key)
+        return self.kwargs['key']+"/redir"
 
 class EnterKeyFormView(FormView):
     template_name = "key.html"
@@ -122,4 +188,12 @@ class EnterKeyFormView(FormView):
     def form_valid(self, form):
         print("key", form['key'].value())
         return super().form_valid(form)
-        
+
+class FormEventDetailRespondView(FormView):
+    template_name = "yesno.html"
+    form_class = InviteForm
+    success_url = ""
+
+    def form_valid(self, form):
+        print("wwwoooohoooo")
+        return super().form_valid(form)
