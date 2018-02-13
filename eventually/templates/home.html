@@ -11,7 +11,7 @@
 		<h2>Public Event List</h2>
 		<ul>
 			{% for event in object_list %}
-			<p><a href="{% url 'event_detail' event.pk %}">{{ event }}</a></p>
+			<li><a href="{% url 'event_detail' event.pk %}">{{ event.event_name }}</a></li>
 			{% endfor %}
 		</ul>
 	{% endblock %}

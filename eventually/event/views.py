@@ -31,21 +31,22 @@ class NewEventView(FormView):
         #set object vars to input
         new_event.event_name = form['event_name'].value()
         datetime_string = form['event_date'].value() + "," + form['event_time'].value() #create dt value
-        print("date/time:", datetime_string) #eg: 1997-07-07,07:07
         new_event.event_date = datetime.strptime(datetime_string, '%Y-%m-%d,%H:%M')
         new_event.event_description = form['event_description'].value()
         new_event.save() #save event to db
 
         #emails
-        email_list = form['event_guests'].value().replace(' ','') #remove spaces
-        email_list = email_list.split(',') #create list
+        email_list = form['event_guests'].value().replace("\n","").replace(' ','') #remove spaces
+        print(form['event_guests'].value())
+        print(form['event_guests'].value().replace("\n","").replace(' ',''))
         print(email_list)
+        email_list = email_list.split(',') #create list
         valid_emails = [i for i in email_list if is_email(i)] #remove invalid emails
-        print("emails:", valid_emails)
+        #print("emails:", valid_emails)
 
         guest_ids = [] #used for debug
         event_line_ids = []
-
+        print("Invite URLS")
         for address in valid_emails:
             if Guest.objects.filter(email_models = address).exists(): #guest exists
                 new_guest = list(Guest.objects.filter(email_models = address))[0]
@@ -54,14 +55,15 @@ class NewEventView(FormView):
                 new_guest.save()
 
             if EventLine.objects.filter(guest_id = new_guest.id).filter(event_id = new_event.id).exists(): #eventline already exists
-                print(new_guest,"already has EventLine with this event")
+                pass #TODO Get rid of Pass
             else:
-                print("making eventline")
                 guest_ids.append(new_guest.id)
                 new_event_line = EventLine(event_id = new_event, guest_id = new_guest)
                 new_event_line.save()
+                print(new_event_line.guest_id, " - http://127.0.0.1:8000", new_event_line.get_absolute_url(), sep = "")
                 event_line_ids.append(new_event_line.id)
-        print("Event Created")
+
+        print("\nEvent Created")
         print("Event ID:",new_event.id,
               "\nGuest IDs:", guest_ids,
               "\nEvent Line IDs", event_line_ids)
@@ -140,6 +142,7 @@ WHERE event_event.id = event_eventline.event_id_id AND event_eventline.invite_ke
             else:
                 #Key is valid and belongs to this event
                 print("Key correct + belongs to this event")
+                context['event_line'] = current_event_line
 
         except:
             #Key is not a key for any event
@@ -155,8 +158,8 @@ WHERE event_event.id = event_eventline.event_id_id AND event_eventline.invite_ke
         # SELECT all Guest objects linked to this Event via EventLine
         context['guest'] = Guest.objects.raw(sql_query)  # add guests to context for template to use
         context['form'] = self.get_form()
-        context['event_line'] = current_event_line
-        current_event_line.seen = True
+
+
         return context
 
     def post(self, request, *args, **kwargs):
@@ -188,10 +191,11 @@ WHERE event_event.id = event_eventline.event_id_id AND event_eventline.invite_ke
 class EnterKeyFormView(FormView):
     template_name = "key.html"
     form_class = EnterKeyForm
-    #success_url = '/event' + get_url(key)
 
     def form_valid(self, form):
         print("key", form['key'].value())
+        event_line = list(EventLine.objects.filter(invite_key = form['key'].value()))[0]
+        self.success_url = event_line.get_absolute_url()
         return super().form_valid(form)
 
 class FormEventDetailRespondView(FormView):

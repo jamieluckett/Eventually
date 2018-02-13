@@ -60,13 +60,16 @@ class EventLine(models.Model):
     
     def __str__(self):
         """Overwrites the models string return to make admin view pretty"""
-        return "E%s/G%s - %s"%(str(self.event_id.id), str(self.guest_id.id), self.invite_key)
+        return "E%s/G%s - %s (%s)"%(str(self.event_id.id), str(self.guest_id.id), self.invite_key, self.guest_id.email_models)
 
     def setGoing(self, value):
         self.going = value
 
     def setSeen(self, value):
         self.seen = value
+
+    def get_absolute_url(self):
+        return reverse('event_invite', args = [self.event_id.id ,self.invite_key])
 
 class InterestedLine(models.Model):
     event_id = models.ForeignKey(Event, on_delete=models.CASCADE)

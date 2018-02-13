@@ -55,5 +55,5 @@ class GroupForm(forms.Form):
                                  widget=forms.widgets.TimeInput(attrs={'type': 'time'}))
 
 class InviteForm(forms.Form):
-    is_going = forms.ChoiceField(choices = (('1', 'Going'), ('0', 'Not Going')),
+    is_going = forms.ChoiceField(label ="Can you go", choices = (('1', 'Going'), ('0', 'Not Going')),
                                  widget = forms.RadioSelect)
