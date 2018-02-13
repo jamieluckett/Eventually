@@ -1,22 +1,26 @@
 <!-- \templates\invite.html -->
-
 {% extends 'base.html' %}
+{% load staticfiles %}
 <html>
 	{% block content %}
-		<title>Eventually - {{ event.event_name }} (Details)</title>
-		<h2>You have been invited to:</h2>
+		<title>Eventually - {{ event.event_name }} ({{ event_line.guest_id }})</title>
+        <link rel="stylesheet" href="{% static "css/event.css"%}">
+		<h3>You ({{ event_line.guest_id }}) have been invited to:</h3>
+
 		<div class="event-entry">
 			<h2>{{ event.event_name }}</h2>
 			<p><b>Date:</b> {{ event.event_date }}</p>
 			<p><b>Date Created:</b> {{ event.event_date_created }}</p>
+			<p><b>Description:</b> {{ event.event_description }}</p>
 		</div>
 
 		<h3>Guest List</h3>
 		{% for g in guest %}
-			<b><p>{{ g.email_models }}</b> - {% if g.going %} Going {% else %} Not Going {% endif %}
+            <b><p class = {% if g.seen and g.going%} "seen-going-guest" {%elif g.seen%} "seen-guest" {%elif g.going%} "going-guest" {%else%} "unseen-guest" {%endif%}>{{ g.email_models }}</b> -
+				{% if g.going %} Going {% else %} Not Going {% endif %}/{% if g.seen %} Seen {% else %} Not Seen {% endif %}
 		{% endfor %}
-		<p></p>
 
+		<p></p>
 			<form method="post" >
 			{% csrf_token %}
 			{{form.as_p}}

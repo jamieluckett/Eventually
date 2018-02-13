@@ -12,3 +12,19 @@ header {
 h1 {
     color: navy;
 }
+
+.unseen-guest {
+    color: grey;
+}
+
+.seen-guest {
+    color: black;
+}
+
+.seen-going-guest {
+    color: green;
+}
+
+.going-guest { /*shouldn't really be possible but shows up in debug*/
+    color: #3CBC3C;
+}

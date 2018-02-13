@@ -101,3 +101,5 @@ ENV/
 .mypy_cache/
 *.sqlite3
 */.idea
+eventually/db.sqlite3
+*.sqlite3

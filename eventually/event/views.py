@@ -1,5 +1,6 @@
 #\event\views.py
 from django.shortcuts import redirect
+from django.urls import reverse_lazy
 from django.views.generic import ListView, FormView, DetailView, CreateView, TemplateView, RedirectView
 from django.core.validators import validate_email
 from .models import Event, Guest, EventLine
@@ -21,12 +22,9 @@ class HomePageView(ListView):
     model = Event
     template_name = 'home.html'
 
-
-
 class NewEventView(FormView):
     template_name = "new.html"
     form_class = EventForm
-    success_url = '/admin'
 
     def form_valid(self, form):
         new_event = Event() #create event object
@@ -35,6 +33,7 @@ class NewEventView(FormView):
         datetime_string = form['event_date'].value() + "," + form['event_time'].value() #create dt value
         print("date/time:", datetime_string) #eg: 1997-07-07,07:07
         new_event.event_date = datetime.strptime(datetime_string, '%Y-%m-%d,%H:%M')
+        new_event.event_description = form['event_description'].value()
         new_event.save() #save event to db
 
         #emails
@@ -67,7 +66,10 @@ class NewEventView(FormView):
               "\nGuest IDs:", guest_ids,
               "\nEvent Line IDs", event_line_ids)
 
+        self.success_url = new_event.get_absolute_url()
+
         return super().form_valid(form)
+
 
 class EditEventView(CreateView):
     form_class = EventForm
@@ -85,6 +87,8 @@ class EditEventView(CreateView):
         return super().form_valid(form)
 
 class EventDetailView(DetailView):
+    #TODO Delete Guest Buttons
+    #TODO Copy Invite Buttons (js?)
     model = Event
     template_name = "event.html"
 
@@ -152,6 +156,7 @@ WHERE event_event.id = event_eventline.event_id_id AND event_eventline.invite_ke
         context['guest'] = Guest.objects.raw(sql_query)  # add guests to context for template to use
         context['form'] = self.get_form()
         context['event_line'] = current_event_line
+        current_event_line.seen = True
         return context
 
     def post(self, request, *args, **kwargs):

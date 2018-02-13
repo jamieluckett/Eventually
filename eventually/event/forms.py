@@ -33,11 +33,16 @@ class EventForm(forms.Form):
                                  widget=forms.widgets.DateInput(attrs={'type': 'date'}),
                                  input_formats=settings.DATE_INPUT_FORMATS)
 
+    event_description= forms.CharField(label = 'Event Description',
+                                 max_length = config.EVENT_DESCRIPTION_LENGTH,
+                                       widget=forms.widgets.Textarea())
+
     event_time = forms.TimeField(label="Event Time",
                                  widget=forms.widgets.TimeInput(attrs={'type': 'time'}))
 
     event_guests = forms.CharField(label = 'Event Guests (csv)',
-                                   max_length = config.EVENT_MAX_GUESTS*config.GUEST_EMAIL_LENGTH)
+                                   max_length = config.EVENT_MAX_GUESTS*config.GUEST_EMAIL_LENGTH,
+                                   widget=forms.widgets.Textarea())
 
 class GroupForm(forms.Form):
     event_name = forms.CharField(label = 'Event Name',

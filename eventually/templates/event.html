@@ -1,8 +1,9 @@
 <!-- \templates\event.html -->
-
 {% extends 'base.html' %}
+{% load staticfiles %}
 <html>
 	{% block content %}
+		<link rel="stylesheet" href="{% static "css/event.css"%}">
 		<title>Eventually - {{ event.event_name }} (Details)</title>
 		<h1>Event Details</h1>
 		<h4>Make sure to copy the url to keep the event!</h4>
@@ -17,7 +18,11 @@
 
 		<h5>Guest List</h5>
 		{% for g in guest %}
-			<b><p>{{ g.email_models }}</b> - {% if g.going %} Going {% else %} Not Going {% endif %}
+			<b><p class = {% if g.seen and g.going%} "seen-going-guest" {%elif g.seen%} "seen-guest" {%else%} "unseen-guest" {%endif%}>{{ g.email_models }}</b> -
+				{% if g.going %} Going {% else %} Not Going {% endif %}/{% if g.seen %} Seen {% else %} Not Seen {% endif %}
+
+			<button class="btn btn-outline-primary ml-2">Copy Invite</button> <button class="btn btn-outline-danger"">Delete Guest</button>
 		{% endfor %}
+		<button class="btn btn-danger">Delete Event</button>
 	{% endblock %}
 </html>

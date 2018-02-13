@@ -4,6 +4,8 @@ from datetime import datetime
 from random import SystemRandom
 import string
 import config
+from django.urls import reverse
+
 
 # Event Object/Model Definitions
 
@@ -22,7 +24,7 @@ class Event(models.Model):
     event_key = models.CharField(default = generate_key, max_length=config.EVENT_KEY_LENGTH)
     event_creator = models.CharField(max_length=75, help_text="Enter Your Name", default = "John Smith")
     event_public = models.BooleanField(default=False, help_text="Whether the public can see this")
-    event_description = models.CharField(max_length = 250, default="")
+    event_description = models.CharField(max_length = config.EVENT_DESCRIPTION_LENGTH, default=config.EVENT_DEFAULT_DESCRIPTION)
         
     def __str__(self):
         """Overwrites the models string return to make admin view pretty"""
@@ -30,7 +32,7 @@ class Event(models.Model):
         #ID - Name
         
     def get_absolute_url(self):
-        return reverse('event_detail', args = [str(self.id)])
+        return reverse('event_detail', args = [self.id])
     
 class Guest(models.Model):
     """Defines Guest table"""
