@@ -55,7 +55,7 @@ class NewEventView(FormView):
                 new_guest.save()
 
             if EventLine.objects.filter(guest_id = new_guest.id).filter(event_id = new_event.id).exists(): #eventline already exists
-                pass #TODO Get rid of Pass
+                pass #TODO Get rid of pass
             else:
                 guest_ids.append(new_guest.id)
                 new_event_line = EventLine(event_id = new_event, guest_id = new_guest) #create new eventline
@@ -77,13 +77,12 @@ class EditEventView(CreateView):
     template_name = "edit.html"
 
     def form_valid(self, form):
-        print("form valid")
         new_event = Event.objects.create()
         new_event.event_name = form['event_name']
         print("date/time:", form['event_date'], form['event_time'])
         new_event.event_date = datetime.combine(form['event_date'], form['event_time'])
         new_event.event_name = form['event_name']
-        new_event.save()
+        new_event.save() #save event
 
         return super().form_valid(form)
 
@@ -128,6 +127,10 @@ class EventDetailRespondView(FormView, DetailView):
 FROM event_event, event_eventline
 WHERE event_event.id = event_eventline.event_id_id AND event_eventline.invite_key = \"""" +
                      str(self.kwargs['key']) +"\"").replace("\n", " ")
+        #SELECT *
+        #FROM event_event, event_eventline
+        #WHERE event_event.id = event_eventline.event_id_id
+        #AND event_eventline.invite_key = key
 
         try:
             #key belongs to an event
@@ -154,10 +157,16 @@ WHERE event_event.id = event_eventline.event_id_id AND event_eventline.invite_ke
     INNER JOIN event_eventline 
     ON event_guest.id = event_eventline.guest_id_id
     WHERE event_eventline.event_id_id = """ + str(context['object'].id)).replace("\n", " ")
-        # SELECT all Guest objects linked to this Event via EventLine
+
+        #SELECT *
+        #FROM event_guest
+        #INNER JOIN event_eventline
+        #ON event_guest.id = event_eventline.guest_id_id
+        #WHERE event_eventline.event_id_id = object.id
+
+        # Select all Guest objects linked to this Event via EventLine
         context['guest'] = Guest.objects.raw(sql_query)  # add guests to context for template to use
         context['form'] = self.get_form()
-
 
         return context
 
@@ -173,16 +182,18 @@ WHERE event_event.id = event_eventline.event_id_id AND event_eventline.invite_ke
         event_line = list(EventLine.objects.filter(invite_key = kwargs['key']))[0]
         print(event_line)
         if form.is_valid():
+            #Update EventLine
             data = form.cleaned_data
             user_going = bool(int(data['is_going']))
             event_line.setGoing(user_going)
             event_line.save(force_update = True)
         else:
+            #This _SHOULD_ never be run
             print("oh no")
         return super().form_valid(form)
 
     def get_success_url(self, *args, **kwargs):
-        print("get_success_url(self, *args, **kwargs)")
+        """Return invitee to event page"""
         pk, key = self.kwargs['pk'], self.kwargs['key']
         print(pk, key)
         return self.kwargs['key']+"/redir"
@@ -193,6 +204,6 @@ class EnterKeyFormView(FormView):
 
     def form_valid(self, form):
         print("key", form['key'].value())
-        event_line = list(EventLine.objects.filter(invite_key = form['key'].value()))[0]
+        event_line = list(EventLine.objects.filter(invite_key = form['key'].value()))[0] #Get EventLine with ID
         self.success_url = event_line.get_absolute_url()
         return super().form_valid(form)
