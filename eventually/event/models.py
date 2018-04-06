@@ -13,7 +13,7 @@ def generate_key():
     """Generates key for Event passkeys"""
     key = ""
     for n in range(config.EVENT_KEY_LENGTH):
-        key = key + (SystemRandom().choice(string.ascii_uppercase + string.digits))
+        key = key + (SystemRandom().choice(string.ascii_uppercase + string.digits)) #alphanumeric
     return key
 
 class Event(models.Model):    
@@ -69,8 +69,12 @@ class EventLine(models.Model):
         self.seen = value
 
     def get_absolute_url(self):
+        """Returns Invite URL for EventLine"""
         return reverse('event_invite', args = [self.event_id.id ,self.invite_key])
 
 class InterestedLine(models.Model):
+    """Defines abstract InterestedLine table.
+    Conntects an Event to an interested Guest."""
     event_id = models.ForeignKey(Event, on_delete=models.CASCADE)
     guest_id = models.ForeignKey(Guest, on_delete=models.CASCADE)
+    interested = models.BooleanField(default=False)

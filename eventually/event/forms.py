@@ -1,17 +1,9 @@
 #\event\forms.py
+# Defines Django Forms
 
 import config
 from django import forms
-from .models import Event
 from django.conf import settings
-from django.utils.safestring import mark_safe
-
-
-
-#class MyModelForm(forms.ModelForm):
-#class Meta:
-#        model = Event
-#        fields = ['event_name']
 
 #Fields
 class CSEmailField(forms.Field):
@@ -23,9 +15,11 @@ class CSEmailField(forms.Field):
 
 #Forms
 class EnterKeyForm(forms.Form):
+    """Form for users to enter invite keys"""
     key = forms.CharField(label = 'Enter Event Key', max_length = config.EVENT_KEY_LENGTH)
 
 class EventForm(forms.Form):
+    """Form for users to create Events"""
     event_name = forms.CharField(label = 'Event Name',
                                  max_length = config.EVENT_NAME_LENGTH)
 
@@ -45,6 +39,7 @@ class EventForm(forms.Form):
                                    widget=forms.widgets.Textarea())
 
 class GroupForm(forms.Form):
+    """Form for users to create Groups"""
     event_name = forms.CharField(label = 'Event Name',
                                  max_length = config.EVENT_KEY_LENGTH)
 
@@ -55,5 +50,6 @@ class GroupForm(forms.Form):
                                  widget=forms.widgets.TimeInput(attrs={'type': 'time'}))
 
 class InviteForm(forms.Form):
-    is_going = forms.ChoiceField(label ="Can you go", choices = (('1', 'Going'), ('0', 'Not Going')),
+    """Form for invited Guest to respond to Event invite"""
+    is_going = forms.ChoiceField(label ="Can you go", choices = (('1', 'Going'), ('0', 'Not Going'), ('2', 'Maybe')),
                                  widget = forms.RadioSelect)

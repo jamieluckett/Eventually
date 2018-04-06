@@ -58,8 +58,8 @@ class NewEventView(FormView):
                 pass #TODO Get rid of Pass
             else:
                 guest_ids.append(new_guest.id)
-                new_event_line = EventLine(event_id = new_event, guest_id = new_guest)
-                new_event_line.save()
+                new_event_line = EventLine(event_id = new_event, guest_id = new_guest) #create new eventline
+                new_event_line.save() #save eventline to db
                 print(new_event_line.guest_id, " - http://127.0.0.1:8000", new_event_line.get_absolute_url(), sep = "")
                 event_line_ids.append(new_event_line.id)
 
@@ -71,7 +71,6 @@ class NewEventView(FormView):
         self.success_url = new_event.get_absolute_url()
 
         return super().form_valid(form)
-
 
 class EditEventView(CreateView):
     form_class = EventForm
@@ -196,13 +195,4 @@ class EnterKeyFormView(FormView):
         print("key", form['key'].value())
         event_line = list(EventLine.objects.filter(invite_key = form['key'].value()))[0]
         self.success_url = event_line.get_absolute_url()
-        return super().form_valid(form)
-
-class FormEventDetailRespondView(FormView):
-    template_name = "yesno.html"
-    form_class = InviteForm
-    success_url = ""
-
-    def form_valid(self, form):
-        print("wwwoooohoooo")
         return super().form_valid(form)

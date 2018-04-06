@@ -16,4 +16,5 @@ urlpatterns = [
     #Redirects
     path('event/<int:pk>/<str:key>/redir', RedirectView.as_view(pattern_name='event_invite'), name='event_redir'),
     path('home', RedirectView.as_view(url='/'), name='home_redir'),
+    path('new', RedirectView.as_view(pattern_name='newevent'), name = 'new_redir')
 ]
