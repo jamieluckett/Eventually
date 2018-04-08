@@ -23,6 +23,7 @@ class Event(models.Model):
     event_date_created = models.DateTimeField(default=datetime.now, blank=True)
     event_key = models.CharField(default = generate_key, max_length=config.EVENT_KEY_LENGTH)
     event_creator = models.CharField(max_length=75, help_text="Enter Your Name", default = "John Smith")
+    event_creator_id = models.IntegerField(default=0, help_text="ID")
     event_public = models.BooleanField(default=False, help_text="Whether the public can see this")
     event_description = models.CharField(max_length = config.EVENT_DESCRIPTION_LENGTH, default=config.EVENT_DEFAULT_DESCRIPTION)
         

@@ -2,7 +2,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
-<!--suppress ALL, SyntaxError -->
 <html>
 	{% block content %}
 		<title>Eventually</title>
@@ -14,5 +13,13 @@
 			<li><a href="{% url 'event_detail' event.pk %}">{{ event.event_name }}</a></li>
 			{% endfor %}
 		</ul>
+		{% if user.is_authenticated %}
+			<h2>{{ user.username }}'s Events</h2>
+			<ul>
+			{% for event in object_list %}
+				<li><a href="{% url 'event_detail' event.pk %}">{{ event.event_name }}</a></li>
+			{% endfor %}
+			</ul>
+		{% endif %}
 	{% endblock %}
 </html>
