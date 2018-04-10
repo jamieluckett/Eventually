@@ -1,11 +1,12 @@
 #\event\views.py
 from django.shortcuts import redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, FormView, DetailView, CreateView, TemplateView, RedirectView
 from django.core.validators import validate_email
 from .models import Event, Guest, EventLine
 from .forms import *
 from datetime import datetime
+import config
 
 
 def get_url(key):
@@ -27,12 +28,17 @@ class NewEventView(FormView):
     form_class = EventForm
 
     def form_valid(self, form):
+        print("Is Authenticated:", self.request.user.is_authenticated)
+        print(self.request.user.id, "-", self.request.user)
+
         new_event = Event() #create event object
         #set object vars to input
         new_event.event_name = form['event_name'].value()
         datetime_string = form['event_date'].value() + "," + form['event_time'].value() #create dt value
         new_event.event_date = datetime.strptime(datetime_string, '%Y-%m-%d,%H:%M')
         new_event.event_description = form['event_description'].value()
+        if self.request.user.is_authenticated: #user is currently logged in
+            new_event.event_creator_id = self.request.user.id
         new_event.save() #save event to db
 
         #emails
@@ -46,6 +52,7 @@ class NewEventView(FormView):
 
         guest_ids = [] #used for debug
         event_line_ids = []
+
         print("Invite URLS")
         for address in valid_emails:
             if Guest.objects.filter(email_models = address).exists(): #guest exists
@@ -96,15 +103,29 @@ class EventDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        print("KWARGS", ) #for url
+        eventlines = []
         # using a sql statement here over django queries because i find them easier to write + read
         sql_query = ("""SELECT *
-FROM event_guest
-INNER JOIN event_eventline ON event_guest.id =event_eventline.guest_id_id
-WHERE event_eventline.event_id_id = """ + str(context['object'].id)).replace("\n", " ")
-        #SELECT all Guest objects linked to this Event via EventLine
-        print("Query\n\n", sql_query)
-        context['guest'] = Guest.objects.raw(sql_query) #add guests to context for template to use
+    FROM event_guest
+    INNER JOIN event_eventline ON event_guest.id =event_eventline.guest_id_id
+    WHERE event_eventline.event_id_id = """ + str(context['object'].id)).replace("\n", " ")
+        # SELECT all Guest objects linked to this Event via EventLine
+
+        context['guests'] = Guest.objects.raw(sql_query)  # add guests to context for template to use#
+        guests = []
+        for g in Guest.objects.raw(sql_query):
+            guests.append(g)
+        print("g:",guests)
+
+        for guest in guests:
+            eventlines.append(config.SITE_URL+EventLine.objects.filter(guest_id=guest.id)[0].get_absolute_url())
+
+        context['url'] = config.SITE_URL + "/event/" + str(kwargs['object'].id) + "/"
+        context['eventlines'] = eventlines
+
         return context
+
 
 class YesNoView(FormView):
     form_class = InviteForm

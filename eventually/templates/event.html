@@ -7,8 +7,7 @@
 		<title>Eventually - {{ event.event_name }} (Details)</title>
 		<h1>Event Details</h1>
 		<h4>Make sure to copy the url to keep the event!</h4>
-
-
+		
 		<div class="event-entry">
 			<h2>{{ event.event_name }}</h2>
 			<p><b>Date:</b> {{ event.event_date }}</p>
@@ -17,12 +16,18 @@
 		</div>
 
 		<h5>Guest List</h5>
-		{% for g in guest %}
-            <b><p class = {% if g.seen and g.going%} "seen-going-guest" {%elif g.seen%} "seen-guest" {%elif g.going%} "going-guest" {%else%} "unseen-guest" {%endif%}>{{ g.email_models }}</b> -
+		{% for g in guests %}
+			<b><p class = {% if g.seen and g.going%} "seen-going-guest" {%elif g.seen%} "seen-guest" {%elif g.going%} "going-guest" {%else%} "unseen-guest" {%endif%}>{{ g.email_models }}</b> -
 				{% if g.going %} Going {% else %} Not Going {% endif %}/{% if g.seen %} Seen {% else %} Not Seen {% endif %}
-			<button class="btn btn-outline-primary ml-2">Copy Invite</button> <button class="btn btn-outline-danger"">Delete Guest</button>
+			<button data-clipboard-text="{{ url |add:g.invite_key }}" class="btn btn-outline-primary ml-2">Copy Invite</button> <button class="btn btn-outline-danger"">Delete Guest</button>
 		{% endfor %}
 	<br></br>
 		<a href = "./delete"><button class="btn btn-danger">Delete Event</button></a>
+		
+	<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+	<script>
+	var btn = document.getElementsByClassName('btn btn-outline-primary ml-2');
+    var clipboard = new ClipboardJS(btn);
+	</script>
 	{% endblock %}
 </html>
