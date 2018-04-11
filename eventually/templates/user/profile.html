@@ -1,0 +1,18 @@
+<!-- \templates\event.html -->
+{% extends 'base.html' %}
+{% load staticfiles %}
+<html>
+	{% block content %}
+		<link rel="stylesheet" href="{% static "css/event.css"%}">
+		<title> {{ user.username }} - User Profile</title>
+		<h1>User Profile</h1>
+		<h3>{{ user.username }}</h3>	
+		<p><b>Email</b> - {{ user.email }}</p>
+		<p><b>Full Name</b> - {{ user.firstname }} {{ user.surname }}</p>
+		<h4>Groups</h4>
+		{% for g in guests %}
+		{% endfor %}
+	<br></br>
+		<a href = "./delete"><button class="btn btn-danger">Delete Account</button></a>
+	{% endblock %}
+</html>

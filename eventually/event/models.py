@@ -6,7 +6,6 @@ import string
 import config
 from django.urls import reverse
 
-
 # Event Object/Model Definitions
 
 def generate_key():

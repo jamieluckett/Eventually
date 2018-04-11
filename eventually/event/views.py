@@ -126,7 +126,6 @@ class EventDetailView(DetailView):
 
         return context
 
-
 class YesNoView(FormView):
     form_class = InviteForm
     success_url = ""
