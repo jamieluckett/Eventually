@@ -20,14 +20,12 @@ def generate_key():
 class GuestGroup(models.Model):
     """Defines Group table"""
     group_name = models.CharField(max_length=50, help_text="Enter Group Name")
-    event_date_created = models.DateTimeField(default=datetime.now, blank=True)
     group_key = models.CharField(default=generate_key, max_length=config.EVENT_KEY_LENGTH)
-    event_creator = models.CharField(max_length=75, help_text="Enter Your Name", default="John Smith")
     event_creator_id = models.IntegerField(default=0, help_text="ID")
 
     def __str__(self):
         """Overwrites the models string return to make admin view pretty"""
-        return "%s - %s" % (str(self.id), self.event_name[:30])
+        return "%s - %s" % (str(self.id), self.group_name)
         # ID - Name
 
 class GroupLine(models.Model):

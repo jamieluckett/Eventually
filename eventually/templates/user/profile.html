@@ -8,11 +8,14 @@
 		<h1>User Profile</h1>
 		<h3>{{ user.username }}</h3>	
 		<p><b>Email</b> - {{ user.email }}</p>
-		<p><b>Full Name</b> - {{ user.firstname }} {{ user.surname }}</p>
+		<p><b>Full Name</b> - {{ user.first_name }} {{ user.last_name }}</p>
 		<h4>Groups</h4>
-		{% for g in guests %}
+		<ul>
+		{% for group in groups %}
+			<li><a href="{% url 'group_detail' group.pk %}">{{ group.group_name }}</a></li>
 		{% endfor %}
-	<br></br>
+		</ul>
+		<br></br>
 		<a href = "./delete"><button class="btn btn-danger">Delete Account</button></a>
 	{% endblock %}
 </html>

@@ -36,7 +36,7 @@ class Event(models.Model):
     
 class Guest(models.Model):
     """Defines Guest table"""
-    email_models = models.EmailField(max_length=70, help_text="Enter Guest email address")
+    email_address = models.EmailField(max_length=70, help_text="Enter Guest email address")
     first_name = models.CharField(max_length=30, help_text="Enter Guest first name", default = "not implemented fn")
     last_name = models.CharField(max_length=30, help_text="Enter Guest surname", default = "not implemented sn")
     
@@ -46,7 +46,7 @@ class Guest(models.Model):
     #     #ID - A. Surname
 
     def __str__(self):
-        return "%s" % str(self.email_models)
+        return "%s" % str(self.email_address)
         
 class EventLine(models.Model):
     """Defines abstract EventLine table.

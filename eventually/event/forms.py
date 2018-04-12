@@ -38,16 +38,26 @@ class EventForm(forms.Form):
                                    max_length = config.EVENT_MAX_GUESTS*config.GUEST_EMAIL_LENGTH,
                                    widget=forms.widgets.Textarea())
 
-class GroupForm(forms.Form):
-    """Form for users to create Groups"""
+class EventFormGroup(forms.Form):
+    """Form for users to create Events"""
     event_name = forms.CharField(label = 'Event Name',
-                                 max_length = config.EVENT_KEY_LENGTH)
+                                 max_length = config.EVENT_NAME_LENGTH)
 
     event_date = forms.DateField(label = "Event Date",
-                                 widget=forms.widgets.DateInput(attrs={'type': 'date'}))
+                                 widget=forms.widgets.DateInput(attrs={'type': 'date'}),
+                                 input_formats=settings.DATE_INPUT_FORMATS)
 
-    event_time = forms.DateField(label="Event Time",
+    event_description= forms.CharField(label = 'Event Description',
+                                 max_length = config.EVENT_DESCRIPTION_LENGTH,
+                                       widget=forms.widgets.Textarea())
+
+    event_time = forms.TimeField(label="Event Time",
                                  widget=forms.widgets.TimeInput(attrs={'type': 'time'}))
+
+    event_guests = forms.CharField(label = 'Event Guests (csv)',
+                                   max_length = config.EVENT_MAX_GUESTS*config.GUEST_EMAIL_LENGTH,
+                                   widget=forms.widgets.Textarea())
+
 
 class InviteForm(forms.Form):
     """Form for invited Guest to respond to Event invite"""

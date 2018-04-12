@@ -24,7 +24,7 @@ class HomePageView(ListView):
     template_name = 'home.html'
 
 class NewEventView(FormView):
-    template_name = "new.html"
+    template_name = "event/new.html"
     form_class = EventForm
 
     def form_valid(self, form):
@@ -61,7 +61,8 @@ class NewEventView(FormView):
                 new_guest = Guest(email_models = address) #creating new guest
                 new_guest.save()
 
-            if EventLine.objects.filter(guest_id = new_guest.id).filter(event_id = new_event.id).exists(): #eventline already exists
+            if EventLine.objects.filter(guest_id = new_guest.id).filter(event_id = new_event.id).exists():
+                #eventline already exists
                 pass #TODO Get rid of pass
             else:
                 guest_ids.append(new_guest.id)
@@ -81,7 +82,7 @@ class NewEventView(FormView):
 
 class EditEventView(CreateView):
     form_class = EventForm
-    template_name = "edit.html"
+    template_name = "event/edit.html"
 
     def form_valid(self, form):
         new_event = Event.objects.create()
@@ -97,7 +98,7 @@ class EventDetailView(DetailView):
     #TODO Delete Guest Buttons
     #TODO Copy Invite Buttons (js?)
     model = Event
-    template_name = "event.html"
+    template_name = "event/details.html"
 
     form_class = InviteForm
 
@@ -131,7 +132,7 @@ class YesNoView(FormView):
     success_url = ""
 
 class EventDetailRespondView(FormView, DetailView):
-    template_name = "invite.html"
+    template_name = "event/invite.html"
     model = Event
     form_class = InviteForm
     success_url = ""
@@ -160,7 +161,7 @@ WHERE event_event.id = event_eventline.event_id_id AND event_eventline.invite_ke
             if current_event_line.event_id.id != context['event'].id:
                 #Key does not belong to _this_ event
                 print("Key for incorrect event!!")
-                self.template_name = "incorrect_key.html"
+                self.template_name = "event/incorrect_key.html"
             else:
                 #Key is valid and belongs to this event
                 print("Key correct + belongs to this event")
@@ -169,7 +170,7 @@ WHERE event_event.id = event_eventline.event_id_id AND event_eventline.invite_ke
         except:
             #Key is not a key for any event
             print("Key doesn't belong to any events!! A liar!!!")
-            self.template_name = "incorrect_key.html"
+            self.template_name = "event/incorrect_key.html"
 
         # LOAD GUEST LIST
         sql_query = ("""SELECT *
@@ -219,7 +220,7 @@ WHERE event_event.id = event_eventline.event_id_id AND event_eventline.invite_ke
         return self.kwargs['key']+"/redir"
 
 class EnterKeyFormView(FormView):
-    template_name = "key.html"
+    template_name = "event/key.html"
     form_class = EnterKeyForm
 
     def form_valid(self, form):
