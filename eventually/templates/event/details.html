@@ -17,7 +17,7 @@
 
 		<h5>Guest List</h5>
 		{% for g in guests %}
-			<b><p class = {% if g.seen and g.going%} "seen-going-guest" {%elif g.seen%} "seen-guest" {%elif g.going%} "going-guest" {%else%} "unseen-guest" {%endif%}>{{ g.email_models }}</b> -
+			<b><p class = {% if g.seen and g.going%} "seen-going-guest" {%elif g.seen%} "seen-guest" {%elif g.going%} "going-guest" {%else%} "unseen-guest" {%endif%}>{{ g.email_address }}</b> -
 				{% if g.going %} Going {% else %} Not Going {% endif %}/{% if g.seen %} Seen {% else %} Not Seen {% endif %}
 			<button data-clipboard-text="{{ url |add:g.invite_key }}" class="btn btn-outline-primary ml-2">Copy Invite</button> <button class="btn btn-outline-danger"">Delete Guest</button>
 		{% endfor %}

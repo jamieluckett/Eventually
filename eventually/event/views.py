@@ -3,6 +3,8 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, FormView, DetailView, CreateView, TemplateView, RedirectView
 from django.core.validators import validate_email
+
+from accounts.models import GuestGroup
 from .models import Event, Guest, EventLine
 from .forms import *
 from datetime import datetime
@@ -24,12 +26,47 @@ class HomePageView(ListView):
     template_name = 'home.html'
 
 class NewEventView(FormView):
-    template_name = "event/new.html"
-    form_class = EventForm
+    def __init__(self, *args, **kwargs):
+        print("__init__")
+        super(NewEventView, self).__init__(*args, **kwargs)
+
+    def get(self, *args, **kwargs):
+        print("get")
+        self.user = args[0].user
+        self.authenticated = args[0].user.is_authenticated
+        self.template_name = "event/new.html"
+
+        print("here")
+        self.user_groups = [group for group in GuestGroup.objects.filter(event_creator_id = self.user.id)]
+        print(self.user_groups)
+
+        if self.authenticated and len(self.user_groups) > 0:
+            #User logged in + has at least 1 group
+            self.form_class = EventFormGroup
+        else:
+            self.form_class = EventForm
+
+        print("get done")
+        return self.render_to_response(self.get_context_data())
+
+    def get_form_kwargs(self):
+        """Passing the `choices` from your view to the form __init__ method"""
+        print("get_form_kwargs")
+        kwargs = super().get_form_kwargs()
+        print(kwargs)
+        try:
+            len(kwargs['data']) #Form Has been filled in!
+        except:
+            if self.authenticated and len(self.user_groups) > 0:
+                # User logged in + has at least 1 group
+                kwargs['user_groups'] = [("groupid_" + str(group.id), str(group)) for group in self.user_groups]
+
+        print("get from kwargs done")
+        return kwargs
 
     def form_valid(self, form):
+        print("Form Valid")
         print("Is Authenticated:", self.request.user.is_authenticated)
-        print(self.request.user.id, "-", self.request.user)
 
         new_event = Event() #create event object
         #set object vars to input
@@ -50,15 +87,20 @@ class NewEventView(FormView):
         valid_emails = [i for i in email_list if is_email(i)] #remove invalid emails
         #print("emails:", valid_emails)
 
+        #load groups
+        if self.authenticated and len(self.user_groups) > 0:
+            groups_selected = form['groups']
+            print(groups_selected)
+
         guest_ids = [] #used for debug
         event_line_ids = []
 
         print("Invite URLS")
         for address in valid_emails:
-            if Guest.objects.filter(email_models = address).exists(): #guest exists
-                new_guest = list(Guest.objects.filter(email_models = address))[0]
+            if Guest.objects.filter(email_address = address).exists(): #guest exists
+                new_guest = list(Guest.objects.filter(email_address = address))[0]
             else:
-                new_guest = Guest(email_models = address) #creating new guest
+                new_guest = Guest(email_address = address) #creating new guest
                 new_guest.save()
 
             if EventLine.objects.filter(guest_id = new_guest.id).filter(event_id = new_event.id).exists():

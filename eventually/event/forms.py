@@ -1,5 +1,6 @@
 #\event\forms.py
 # Defines Django Forms
+from django.forms import CheckboxSelectMultiple
 
 import config
 from django import forms
@@ -57,6 +58,14 @@ class EventFormGroup(forms.Form):
     event_guests = forms.CharField(label = 'Event Guests (csv)',
                                    max_length = config.EVENT_MAX_GUESTS*config.GUEST_EMAIL_LENGTH,
                                    widget=forms.widgets.Textarea())
+
+    groups = forms.MultipleChoiceField(choices=[], widget=CheckboxSelectMultiple, required=False)
+
+    def __init__(self, *args, **kwargs):
+        #https://stackoverflow.com/questions/47363190/from-the-view-how-do-i-pass-custom-choices-into-a-forms-choicefield
+        group_names = kwargs.pop('user_groups')
+        super(EventFormGroup, self).__init__(*args, **kwargs)
+        self.fields['groups'].choices = group_names
 
 
 class InviteForm(forms.Form):

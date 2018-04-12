@@ -6,7 +6,7 @@ import config, string
 from random import SystemRandom
 
 from django.db import models
-
+from django.contrib.auth.models import User
 from event.models import Guest, Event
 
 
@@ -43,3 +43,5 @@ class EventOwnerLine(models.Model):
     def __str__(self):
         """Overwrites the models string return to make admin view pretty"""
         return "E%s/U%s"%(str(self.event_id.id), str(self.user_id.id))
+
+#Managers
