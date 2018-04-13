@@ -1,2 +1,3 @@
-![Eventually](https://i.imgur.com/TiTl9OO.png" Logo Title Text 1")
+![Eventually](https://i.imgur.com/TiTl9OO.png")
+
 https://clipboardjs.com/
