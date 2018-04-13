@@ -39,6 +39,7 @@ class GroupLine(models.Model):
 class EventOwnerLine(models.Model):
     event_id = models.ForeignKey(Event, on_delete = models.CASCADE)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    emailed = models.BooleanField(default=False, help_text = "Guest Invite sent")
 
     def __str__(self):
         """Overwrites the models string return to make admin view pretty"""

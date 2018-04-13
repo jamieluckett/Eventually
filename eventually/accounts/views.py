@@ -1,6 +1,7 @@
 #/accounts/views.py
 from django.contrib.auth.views import LoginView
 from django.core.validators import validate_email
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, FormView, CreateView
 
@@ -21,6 +22,12 @@ class RegisterView(CreateView):
     success_url = reverse_lazy('login')
     template_name = 'registration/register.html'
 
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return super().get(request, *args, **kwargs)
+        else:
+            return redirect("home")
+
 class UserProfieView(DetailView):
     template_name = 'user/profile.html'
 
@@ -29,6 +36,8 @@ class UserProfieView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        if not self.request.user.is_authenticated:
+            self.template_name = 'user/profile_no_user.html'
 
         #Get Groups
         groups = GuestGroup.objects.filter(event_creator_id = kwargs['object'].id)
