@@ -20,6 +20,7 @@ class Event(models.Model):
     event_name = models.CharField(max_length=50, help_text="Enter Event name")
     event_date = models.DateTimeField(help_text="Enter Event Date and Time")
     event_date_created = models.DateTimeField(default=datetime.now, blank=True)
+    event_lifetime = event_creator_id = models.IntegerField(default=10, help_text="Life After Event Time (Days)")
     event_key = models.CharField(default = generate_key, max_length=config.EVENT_KEY_LENGTH)
     event_creator = models.CharField(max_length=75, help_text="Enter Your Name", default = "John Smith")
     event_creator_id = models.IntegerField(default=0, help_text="ID")

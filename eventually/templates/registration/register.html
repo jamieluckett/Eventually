@@ -5,9 +5,7 @@
 <h2>Sign up</h2>
 <form method="post">
 	{% csrf_token %}
-	<p>{{ form.username }}</p>
-	<p>{{ form.password1 }}</p>
-	<p>{{ form.password2 }}</p>
-	<button type="submit">Sign up</button>
+	{{ form.as_p }}
+	<button class="btn btn-primary ml-2" type="submit">Register</button>
 </form>
 {% endblock %}

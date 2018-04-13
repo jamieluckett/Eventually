@@ -103,3 +103,5 @@ ENV/
 */.idea
 eventually/db.sqlite3
 *.sqlite3
+eventually/*.sqlite3
+*.sqlite3

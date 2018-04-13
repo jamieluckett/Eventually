@@ -19,30 +19,32 @@ class CSEmailField(forms.Field):
 # Forms
 class EnterKeyForm(forms.Form):
     """Form for users to enter invite keys"""
-    key = forms.CharField(label='Enter Event Key', max_length=config.EVENT_KEY_LENGTH)
-
+    key = forms.CharField(label='Enter Event Key',
+                          max_length=config.EVENT_KEY_LENGTH,
+                          widget = forms.widgets.TextInput(attrs={'class': 'form-control'}))
 
 class EventForm(forms.Form):
     """Form for users to create Events"""
     event_name = forms.CharField(label='Event Name',
-                                 max_length=config.EVENT_NAME_LENGTH)
+                                 max_length=config.EVENT_NAME_LENGTH,
+								 widget = forms.widgets.TextInput(attrs={'class': 'form-control'}))
 
     event_date = forms.DateField(label="Event Date",
-                                 widget=forms.widgets.DateInput(attrs={'type': 'date'}),
+                                 widget=forms.widgets.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
                                  input_formats=settings.DATE_INPUT_FORMATS)
 
     event_description = forms.CharField(label='Event Description',
                                         max_length=config.EVENT_DESCRIPTION_LENGTH,
-                                        widget=forms.widgets.Textarea())
+                                        widget=forms.widgets.Textarea(attrs={'class': 'form-control', 'class': 'form-control'}))
 
     event_time = forms.TimeField(label="Event Time",
-                                 widget=forms.widgets.TimeInput(attrs={'type': 'time'}))
+                                 widget=forms.widgets.TimeInput(attrs={'type': 'time', 'class': 'form-control'}))
 
     event_guests = forms.CharField(label='Event Guests (csv)',
                                    max_length=config.EVENT_MAX_GUESTS * config.GUEST_EMAIL_LENGTH,
-                                   widget=forms.widgets.Textarea())
+                                   widget=forms.widgets.Textarea(attrs={'class': 'form-control', 'class': 'form-control'}))
 
-    groups = forms.MultipleChoiceField(choices=[], widget=CheckboxSelectMultiple, required=False)
+    groups = forms.MultipleChoiceField(choices=[], widget=CheckboxSelectMultiple(attrs={'class': 'form-control'}), required=False)
 
     def __init__(self, *args, **kwargs):
         # https://stackoverflow.com/questions/47363190/from-the-view-how-do-i-pass-custom-choices-into-a-forms-choicefield

@@ -1,11 +1,10 @@
 #/accounts/views.py
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.views import LoginView
 from django.core.validators import validate_email
-from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, FormView, CreateView
 
-from accounts.forms import EditGroupForm, CreateGroupForm
+from accounts.forms import EditGroupForm, CreateGroupForm, UserRegisterForm, CustomAuthenticationForm
 from accounts.models import GuestGroup, GroupLine
 from event.guests import get_guest
 
@@ -18,7 +17,7 @@ def is_email(address):
         return False
 
 class RegisterView(CreateView):
-    form_class = UserCreationForm
+    form_class = UserRegisterForm
     success_url = reverse_lazy('login')
     template_name = 'registration/register.html'
 
@@ -83,3 +82,8 @@ class GroupEditView(CreateView):
 
     def form_valid(self, form):
         return super().form_valid(form)
+
+class CustomLoginView(LoginView):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.form_class = CustomAuthenticationForm
