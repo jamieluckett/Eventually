@@ -19,9 +19,9 @@ def generate_key():
 
 class GuestGroup(models.Model):
     """Defines Group table"""
-    group_name = models.CharField(max_length=50, help_text="Enter Group Name")
-    group_key = models.CharField(default=generate_key, max_length=config.EVENT_KEY_LENGTH)
-    event_creator_id = models.IntegerField(default=0, help_text="ID")
+    group_name = models.CharField(max_length = 50, help_text = "Enter Group Name")
+    group_key = models.CharField(default = generate_key, max_length = config.EVENT_KEY_LENGTH)
+    event_creator_id = models.IntegerField(default=0, help_text = "ID")
 
     def __str__(self):
         """Overwrites the models string return to make admin view pretty"""
@@ -29,8 +29,8 @@ class GuestGroup(models.Model):
         # ID - Name
 
 class GroupLine(models.Model):
-    group_id = models.ForeignKey(GuestGroup, on_delete=models.CASCADE)
-    guest_id = models.ForeignKey(Guest, on_delete=models.CASCADE)
+    group_id = models.ForeignKey(GuestGroup, on_delete = models.CASCADE)
+    guest_id = models.ForeignKey(Guest, on_delete = models.CASCADE)
 
     def __str__(self):
         """Overwrites the models string return to make admin view pretty"""

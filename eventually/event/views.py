@@ -4,7 +4,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, FormView, DetailView, CreateView, TemplateView, RedirectView
 from django.core.validators import validate_email
 
-from accounts.models import GuestGroup
+from accounts.models import GuestGroup, GroupLine
 from .models import Event, Guest, EventLine
 from .forms import *
 from datetime import datetime
@@ -26,45 +26,20 @@ class HomePageView(ListView):
     template_name = 'home.html'
 
 class NewEventView(FormView):
-    def __init__(self, *args, **kwargs):
-        print("__init__")
-        super(NewEventView, self).__init__(*args, **kwargs)
+    form_class = EventForm
+    template_name = "event/new.html"
 
-    def get(self, *args, **kwargs):
-        print("get")
-        self.user = args[0].user
-        self.authenticated = args[0].user.is_authenticated
-        self.template_name = "event/new.html"
-
-        print("here")
-        self.user_groups = [group for group in GuestGroup.objects.filter(event_creator_id = self.user.id)]
-        print(self.user_groups)
-
-        if self.authenticated and len(self.user_groups) > 0:
-            #User logged in + has at least 1 group
-            self.form_class = EventFormGroup
-        else:
-            self.form_class = EventForm
-
-        print("get done")
-        return self.render_to_response(self.get_context_data())
-
-    def get_form_kwargs(self):
-        """Passing the `choices` from your view to the form __init__ method"""
-        print("get_form_kwargs")
+    def get_form_kwargs(self, *args):
+        """Pass groups belonging to authenticated user to form"""
         kwargs = super().get_form_kwargs()
-        print(kwargs)
-        try:
-            len(kwargs['data']) #Form Has been filled in!
-        except:
-            if self.authenticated and len(self.user_groups) > 0:
-                # User logged in + has at least 1 group
-                kwargs['user_groups'] = [("groupid_" + str(group.id), str(group)) for group in self.user_groups]
-
-        print("get from kwargs done")
+        self.user_groups = [group for group in GuestGroup.objects.filter(event_creator_id = self.request.user.id)]
+        if self.request.user.is_authenticated and len(self.user_groups) > 0:
+            kwargs['user_groups'] = [(str(group.id), str(group)) for group in self.user_groups]
         return kwargs
 
     def form_valid(self, form):
+        #TODO Put this in seperate functions
+        """Run if form valid. Creates event object + guests."""
         print("Form Valid")
         print("Is Authenticated:", self.request.user.is_authenticated)
 
@@ -80,24 +55,32 @@ class NewEventView(FormView):
 
         #emails
         email_list = form['event_guests'].value().replace("\n","").replace(' ','') #remove spaces
-        print(form['event_guests'].value())
-        print(form['event_guests'].value().replace("\n","").replace(' ',''))
         print(email_list)
         email_list = email_list.split(',') #create list
-        valid_emails = [i for i in email_list if is_email(i)] #remove invalid emails
         #print("emails:", valid_emails)
 
         #load groups
-        if self.authenticated and len(self.user_groups) > 0:
-            groups_selected = form['groups']
-            print(groups_selected)
+        groups_selected = []
+        try:
+            groups_selected = form['groups'].value()
+            print("Groups Selected:",groups_selected.value())
+        except:
+            #TODO Clean this up, you don't need a try/except
+            pass
 
-        guest_ids = [] #used for debug
+        for group_id in groups_selected:
+            group = GuestGroup.objects.filter(id = int(group_id))[0]
+            group_guests = GroupLine.objects.filter(group_id = group)
+            for group_line in group_guests:
+                email_list.append(group_line.guest_id.email_address)
+
+        valid_emails = [i for i in email_list if is_email(i)]  # remove invalid emails
+        guest_ids = [] #used for debug #TODO see if this is actually debug?
         event_line_ids = []
 
         print("Invite URLS")
         for address in valid_emails:
-            if Guest.objects.filter(email_address = address).exists(): #guest exists
+            if Guest.objects.filter(email_address = address).exists(): # guest exists
                 new_guest = list(Guest.objects.filter(email_address = address))[0]
             else:
                 new_guest = Guest(email_address = address) #creating new guest
@@ -113,7 +96,7 @@ class NewEventView(FormView):
                 print(new_event_line.guest_id, " - http://127.0.0.1:8000", new_event_line.get_absolute_url(), sep = "")
                 event_line_ids.append(new_event_line.id)
 
-        print("\nEvent Created")
+        print("\n= Event Created = ")
         print("Event ID:",new_event.id,
               "\nGuest IDs:", guest_ids,
               "\nEvent Line IDs", event_line_ids)
