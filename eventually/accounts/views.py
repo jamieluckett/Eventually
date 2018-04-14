@@ -9,7 +9,6 @@ from accounts.forms import EditGroupForm, CreateGroupForm, UserRegisterForm, Cus
 from accounts.models import GuestGroup, GroupLine
 from event.guests import get_guest
 
-
 def is_email(address):
     try:
         validate_email(address)
@@ -54,6 +53,8 @@ class CreateGroupView(FormView):
         print("Is Authenticated:", self.request.user.is_authenticated)
         print(self.request.user.id, "-", self.request.user)
 
+        print(form['group_guests'].value())
+
         # Create Group
         new_group = GuestGroup()
         new_group.event_creator_id = self.request.user.id
@@ -63,8 +64,11 @@ class CreateGroupView(FormView):
         #Get Emails from Form
         email_string = form['group_guests'].value()
         email_string = email_string.replace("\n", "")
+        email_string = email_string.replace("\r", "")
         email_string = email_string.replace(" ", "")
         emails = email_string.split(",")
+        print("email_string", email_string)
+        print("emails", emails)
         final_emails = []
 
         for email in emails:

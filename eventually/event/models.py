@@ -56,12 +56,13 @@ class EventLine(models.Model):
     guest_id = models.ForeignKey(Guest, on_delete=models.CASCADE)
     going = models.BooleanField(default = False)
     seen = models.BooleanField(default = False)
-    emailed = models.BooleanField(default = False)
+    emailed = models.BooleanField(default=False, help_text = "Guest Invite sent")
     invite_key = models.CharField(default = generate_key, max_length=config.EVENT_KEY_LENGTH)
     
     def __str__(self):
         """Overwrites the models string return to make admin view pretty"""
-        return "E%s/G%s - %s (%s)"%(str(self.event_id.id), str(self.guest_id.id), self.invite_key, self.guest_id.email_models)
+        return "E%s/G%s - %s (%s)"%(str(self.event_id.id), str(self.guest_id.id),
+                                    self.invite_key, self.guest_id.email_address)
 
     def setGoing(self, value):
         self.going = value

@@ -10,10 +10,6 @@ from .forms import *
 from datetime import datetime
 import config
 
-
-def get_url(key):
-    return '1'
-
 def is_email(address):
     try:
         validate_email(address)
@@ -54,7 +50,7 @@ class NewEventView(FormView):
         new_event.save() #save event to db
 
         #emails
-        email_list = form['event_guests'].value().replace("\n","").replace(' ','') #remove spaces
+        email_list = form['event_guests'].value().replace("\n","").replace("\r","").replace(' ','') #remove spaces + \r\n
         print(email_list)
         email_list = email_list.split(',') #create list
         #print("emails:", valid_emails)

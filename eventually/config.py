@@ -1,8 +1,12 @@
 import configparser
 
-CONFIG_LOCATION = 'config.cfg' 
+CONFIG_LOCATION = 'config.cfg'
+EMAIL_CONFIG_LOCATION = 'email_config.cfg'
+
 config = configparser.ConfigParser()
+email_config = configparser.ConfigParser()
 config.read(CONFIG_LOCATION)
+email_config.read(EMAIL_CONFIG_LOCATION)
 
 EVENT_NAME_LENGTH = int(config['EVENT']['EVENT_NAME_LENGTH'])
 EVENT_KEY_LENGTH = int(config['EVENT']['EVENT_KEY_LENGTH'])
@@ -18,3 +22,15 @@ GROUP_NAME_LENGTH = str(config['GROUP']['GROUP_NAME_LENGTH'])
 EVENT_DEFAULT_DESCRIPTION = str(config['TEMPORARY']['EVENT_DESCRIPTION'])
 
 SITE_URL = str(config['SITE']['URL'])
+
+SUBJECT_TEMPLATE = str(config['EMAIL']['SUBJECT_TEMPLATE'])
+
+DOMAIN = str(config['OTHER']['DOMAIN'])
+
+#EMAIL
+
+EMAIL_SERVER = str(email_config['EMAIL']['SERVER'])
+EMAIL_PORT = int(email_config['EMAIL']['PORT'])
+EMAIL_ADDRESS = str(email_config['EMAIL']['ADDRESS'])
+EMAIL_PASSWORD = str(email_config['EMAIL']['PASSWORD'])
+EMAIL_LOOP_INTERVAL = int(email_config['EMAIL']['EMAIL_LOOP_INTERVAL'])

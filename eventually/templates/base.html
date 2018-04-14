@@ -34,7 +34,9 @@
 							<a class="nav-item nav-link float-right" href="/accounts/profile">Profile</a>
 							<a class="nav-item nav-link float-right" href="/accounts/profile/groups/new">Create Group</a>
 							<a class="nav-item nav-link float-right" href="/accounts/logout">Logout</a>
-							
+							{% if user.id == 1 %}
+								<a class="nav-item nav-link float-right" href="/admin">Admin</a>
+							{% endif %}
 						{% else %}
 							<a class="nav-item nav-link float-right" href="/accounts/login">Login</a>
 							<a class="nav-item nav-link float-right" href="/accounts/register">Register</a>

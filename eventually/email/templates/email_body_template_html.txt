@@ -1,0 +1,7 @@
+<h1>Eventually<h1>
+
+<p>Hello! You have received an invite to an Eventually user's event. Please follow the link below to respond and see more details.</p>
+<p><b>Event Name:</b> %s</p>
+<p><b>Link:</b> <a href="%s">%s</a></p>
+
+<p>Thank you for your time.<p>

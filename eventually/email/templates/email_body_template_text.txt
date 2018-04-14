@@ -1,0 +1,7 @@
+Eventually
+
+Hello! You have received an invite to an Eventually user's event. Please follow the link below to respond and see more details.
+Event Name: %s
+Link: %s
+
+Thank you for your time.

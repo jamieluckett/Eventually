@@ -105,3 +105,8 @@ eventually/db.sqlite3
 *.sqlite3
 eventually/*.sqlite3
 *.sqlite3
+eventually/email_config.cfg
+eventually/db.sqlite3
+*.sqlite3
+eventually/db.sqlite3
+eventually/db.sqlite3
