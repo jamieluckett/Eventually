@@ -1,20 +1,28 @@
 #/email/Email.py
 import smtplib, config
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
+from socket import socket
+
 
 class Emailer():
     def __init__(self):
-        self.server = smtplib.SMTP(config.EMAIL_SERVER, config.EMAIL_PORT)
-        self.server.starttls()
-        print("Server Setup")
-        self.server.login(config.EMAIL_ADDRESS, config.EMAIL_PASSWORD)
+        try:
+            self.server = smtplib.SMTP(config.EMAIL_SERVER, config.EMAIL_PORT)
+            self.server.starttls()
+            self.server.login(config.EMAIL_ADDRESS, config.EMAIL_PASSWORD)
+            self.setup = True
+        except socket.error as e:
+            print(e)
+            self.setup = False
+
 
     def send_email(self, message):
         """Sends a MIMEMulipart Message"""
-        message['From'] = config.EMAIL_PASSWORD
-        self.server.send_message(message, config.EMAIL_PASSWORD, message['To'])
-        print("Email Sent")
+        if self.setup:
+            message['From'] = config.EMAIL_PASSWORD
+            self.server.send_message(message, config.EMAIL_PASSWORD, message['To'])
+            print("Email Sent")
+        else:
+            print("Emailer failed to setup")
 
 #TEST
 # msg = MIMEMultipart()

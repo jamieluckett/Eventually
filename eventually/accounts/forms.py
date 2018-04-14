@@ -19,6 +19,8 @@ class EditGroupForm(forms.Form):
     key = forms.CharField(label='Enter Guests (csv)', max_length=3000)
 	
 class UserRegisterForm(UserCreationForm):
+    """Form for users to Register
+    Identical to UserCreationForm but can be styled"""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['password1'].widget.attrs.update({'class': 'form-control'})
@@ -26,6 +28,8 @@ class UserRegisterForm(UserCreationForm):
         self.fields['username'].widget.attrs.update({'class': 'form-control'})
 
 class CustomAuthenticationForm(AuthenticationForm):
+    """Form for users to Login
+    Identical to AuthenticationForm but can be styled"""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['username'].widget.attrs.update({'class': 'form-control'})

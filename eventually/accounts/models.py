@@ -1,6 +1,4 @@
-from datetime import datetime
-
-from django.contrib.auth.models import User
+#/accounts/models.py
 
 import config, string
 from random import SystemRandom
@@ -29,6 +27,7 @@ class GuestGroup(models.Model):
         # ID - Name
 
 class GroupLine(models.Model):
+    """Define abstract table to link Guests to Groups"""
     group_id = models.ForeignKey(GuestGroup, on_delete = models.CASCADE)
     guest_id = models.ForeignKey(Guest, on_delete = models.CASCADE)
 
@@ -37,6 +36,7 @@ class GroupLine(models.Model):
         return "Gr%s/G%s (%s/%s)"%(str(self.group_id.id), str(self.guest_id.id), str(self.group_id), str(self.guest_id))
 
 class EventOwnerLine(models.Model):
+    """Define abstract table to link Events to Owners"""
     event_id = models.ForeignKey(Event, on_delete = models.CASCADE)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 

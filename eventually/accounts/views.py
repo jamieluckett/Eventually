@@ -10,6 +10,7 @@ from accounts.models import GuestGroup, GroupLine
 from event.guests import get_guest
 
 def is_email(address):
+    """Checks whether address string is a valid email"""
     try:
         validate_email(address)
         return True
@@ -17,6 +18,7 @@ def is_email(address):
         return False
 
 class RegisterView(CreateView):
+    """View used in User Registration"""
     form_class = UserRegisterForm
     success_url = reverse_lazy('login')
     template_name = 'registration/register.html'
@@ -28,6 +30,7 @@ class RegisterView(CreateView):
             return redirect("home")
 
 class UserProfieView(DetailView):
+    """View used for User profiles"""
     template_name = 'user/profile.html'
 
     def get_object(self):
@@ -44,11 +47,13 @@ class UserProfieView(DetailView):
         return context
 
 class CreateGroupView(FormView):
+    """View used in creating groups."""
     template_name = "user/new_group.html"
     form_class = CreateGroupForm
     success_url = "/"
 
     def form_valid(self, form):
+        """Run when form input is valid, creates Group and GroupLines"""
         print("CreateGroupView.form_valid()")
         print("Is Authenticated:", self.request.user.is_authenticated)
         print(self.request.user.id, "-", self.request.user)
@@ -87,6 +92,7 @@ class CreateGroupView(FormView):
         return super().form_valid(form)
 
 class GroupDetailView(DetailView):
+    """View to show detail of a group."""
     template_name = 'user/group_detail.html'
 
     def get(self, request, *args, **kwargs):
@@ -117,6 +123,8 @@ class GroupEditView(CreateView):
         return super().form_valid(form)
 
 class CustomLoginView(LoginView):
+    """View used in User logins
+    Based on LoginView but with a custom form to allow for Bootstrap styling"""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.form_class = CustomAuthenticationForm

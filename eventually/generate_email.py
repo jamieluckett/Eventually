@@ -21,13 +21,12 @@ def generate_all_email():
     text_template = open("email/templates/email_body_template_text.txt").read()
     #Load objects
     EventLines = EventLine.objects.filter(emailed = False)
+    #Generate Emails
     emails = []
     for EventLineObject in EventLines:
         emails.append(generate_email(EventLineObject, html_template, text_template))
         EventLineObject.emailed = True
         EventLineObject.save(force_update = True)
-
-    print(emails)
 
     return emails
 

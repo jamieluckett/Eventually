@@ -18,10 +18,12 @@ def is_email(address):
         return False
 
 class HomePageView(ListView):
+    """View used for Homepage"""
     model = Event
     template_name = 'home.html'
 
 class NewEventView(FormView):
+    """View used for creating a new Event"""
     form_class = EventForm
     template_name = "event/new.html"
 
@@ -51,7 +53,6 @@ class NewEventView(FormView):
 
         #emails
         email_list = form['event_guests'].value().replace("\n","").replace("\r","").replace(' ','') #remove spaces + \r\n
-        print(email_list)
         email_list = email_list.split(',') #create list
         #print("emails:", valid_emails)
 
@@ -59,7 +60,7 @@ class NewEventView(FormView):
         groups_selected = []
         try:
             groups_selected = form['groups'].value()
-            print("Groups Selected:",groups_selected.value())
+            #print("Groups Selected:",groups_selected.value())
         except:
             #TODO Clean this up, you don't need a try/except
             pass
@@ -138,7 +139,6 @@ class EventDetailView(DetailView):
         guests = []
         for g in Guest.objects.raw(sql_query):
             guests.append(g)
-        print("g:",guests)
 
         for guest in guests:
             eventlines.append(config.SITE_URL+EventLine.objects.filter(guest_id=guest.id)[0].get_absolute_url())
@@ -148,11 +148,9 @@ class EventDetailView(DetailView):
 
         return context
 
-class YesNoView(FormView):
-    form_class = InviteForm
-    success_url = ""
-
 class EventDetailRespondView(FormView, DetailView):
+    """View used for invites to Events
+    A combination of a FormView and a DetailView"""
     template_name = "event/invite.html"
     model = Event
     form_class = InviteForm
