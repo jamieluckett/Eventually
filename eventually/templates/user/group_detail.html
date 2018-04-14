@@ -5,27 +5,12 @@
 	{% block content %}
 		<title>Eventually - {{ group.group_name }} (Details)</title>
 		<h1>Group Details</h1>
-
-		<div class="event-entry">
-			<h2>{{ event.event_name }}</h2>
-			<p><b>Date:</b> {{ event.event_date }}</p>
-			<p><b>Date Created:</b> {{ event.event_date_created }}</p>
-			<p><b>Description:</b> {{ event.event_description }}</p>
-		</div>
-
-		<h5>Guest List</h5>
-		{% for g in guests %}
-			<b><p class = {% if g.seen and g.going%} "seen-going-guest" {%elif g.seen%} "seen-guest" {%elif g.going%} "going-guest" {%else%} "unseen-guest" {%endif%}>{{ g.email_models }}</b> -
-				{% if g.going %} Going {% else %} Not Going {% endif %}/{% if g.seen %} Seen {% else %} Not Seen {% endif %}
-			<button data-clipboard-text="{{ url |add:g.invite_key }}" class="btn btn-outline-primary ml-2">Copy Invite</button> <button class="btn btn-outline-danger"">Delete Guest</button>
-		{% endfor %}
-	<br></br>
-		<a href = "./delete"><button class="btn btn-danger">Delete Event</button></a>
-
-	<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
-	<script>
-	var btn = document.getElementsByClassName('btn btn-outline-primary ml-2');
-    var clipboard = new ClipboardJS(btn);
-	</script>
+		<h2>{{ guestgroup.group_name }}</h2>
+		<h3>Guests</h3>
+		<ul>
+			{% for guest in guests %}
+				<li>{{ guest }}</li>
+			{% endfor %}
+		</ul>
 	{% endblock %}
 </html>

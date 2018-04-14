@@ -75,7 +75,7 @@ class CreateGroupView(FormView):
             if is_email(email):
                 final_emails.append(email)
 
-        print("Final Emails:",final_emails)
+        print("Final Emails:", final_emails)
 
         #Create GroupLines
         for email in final_emails:
@@ -88,6 +88,26 @@ class CreateGroupView(FormView):
 
 class GroupDetailView(DetailView):
     template_name = 'user/group_detail.html'
+
+    def get(self, request, *args, **kwargs):
+        pk = kwargs['pk']
+        self.object = self.get_object(pk)
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
+
+    def get_object(self, pk):
+        return GuestGroup.objects.filter(id = pk)[0]
+
+
+    def get_context_data(self, **kwargs):
+        context = super(DetailView, self).get_context_data(**kwargs)
+        GroupLines = GroupLine.objects.filter(group_id = context['guestgroup'])
+        guests = []
+        for i in range(len(GroupLines)):
+            guests.append(GroupLines[i].guest_id)
+        context['guests'] = guests
+        print("Context\n",context)
+        return context
 
 class GroupEditView(CreateView):
     template_name = "user/group_edit.html"
