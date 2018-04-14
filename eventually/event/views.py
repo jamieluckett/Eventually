@@ -148,6 +148,10 @@ class EventDetailView(DetailView):
 
         return context
 
+class PublicEventCreateView(FormView):
+    form_class = PublicEventForm
+    template_name = "event/new_public_event.html"
+
 class EventDetailRespondView(FormView, DetailView):
     """View used for invites to Events
     A combination of a FormView and a DetailView"""

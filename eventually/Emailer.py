@@ -20,7 +20,7 @@ class Emailer():
         if self.setup:
             message['From'] = config.EMAIL_PASSWORD
             self.server.send_message(message, config.EMAIL_PASSWORD, message['To'])
-            print("Email Sent")
+            print("Email Sent - %s/%s"%(message['To'], message['Subject']))
         else:
             print("Emailer failed to setup")
 

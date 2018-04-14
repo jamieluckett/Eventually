@@ -17,6 +17,12 @@ class CreateGroupForm(forms.Form):
 class EditGroupForm(forms.Form):
     """Form for users to enter groups"""
     key = forms.CharField(label='Enter Guests (csv)', max_length=3000)
+
+class DeleteProfileForm(forms.Form):
+    """Form for users to delete account"""
+    user_confirmation = forms.ChoiceField(label = "Are you sure you want to delete your account?",
+                                          choices=((1, "Yes"), (0, "No")),
+                                          widget = forms.widgets.RadioSelect())
 	
 class UserRegisterForm(UserCreationForm):
     """Form for users to Register

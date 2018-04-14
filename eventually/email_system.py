@@ -15,6 +15,7 @@ def email_loop():
         EmailSystem = Emailer()
         for email in emails:
             EmailSystem.send_email(email)
+        print()
     else:
         print()
 

@@ -1,0 +1,15 @@
+<!-- \templates\registration/delete.html -->
+
+{% extends 'base.html' %}
+<html>
+	{% block content %}
+        <title>Eventually - Delete Profile</title>
+		<h2>Delete User</h2>
+		<form method="post" >
+			{% csrf_token %}
+			{{form.user_confirmation}}
+			<button class="btn btn-danger ml-2" type="submit">Confirm</button>
+			<a href=".." class="btn btn-success ml-2">Go back!</a>
+		</form>
+	{% endblock %}
+</html>

@@ -33,12 +33,13 @@ class EventForm(forms.Form):
                                  widget=forms.widgets.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
                                  input_formats=settings.DATE_INPUT_FORMATS)
 
+    event_time = forms.TimeField(label="Event Time",
+                                 widget=forms.widgets.TimeInput(attrs={'type': 'time', 'class': 'form-control'}))
+
     event_description = forms.CharField(label='Event Description',
                                         max_length=config.EVENT_DESCRIPTION_LENGTH,
                                         widget=forms.widgets.Textarea(attrs={'class': 'form-control', 'class': 'form-control'}))
 
-    event_time = forms.TimeField(label="Event Time",
-                                 widget=forms.widgets.TimeInput(attrs={'type': 'time', 'class': 'form-control'}))
 
     event_guests = forms.CharField(label='Event Guests (csv)',
                                    max_length=config.EVENT_MAX_GUESTS * config.GUEST_EMAIL_LENGTH,
@@ -58,6 +59,26 @@ class EventForm(forms.Form):
             self.fields['groups'].choices = group_names
         else:
             del self.fields['groups']
+
+class PublicEventForm(forms.Form):
+    event_name = forms.CharField(label='Event Name',
+                                 max_length=config.EVENT_NAME_LENGTH,
+                                 widget=forms.widgets.TextInput(attrs={'class': 'form-control'}))
+
+    event_date = forms.DateField(label="Event Date",
+                                 widget=forms.widgets.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+                                 input_formats=settings.DATE_INPUT_FORMATS)
+
+    event_time = forms.TimeField(label="Event Time",
+                                 widget=forms.widgets.TimeInput(attrs={'type': 'time', 'class': 'form-control'}))
+
+    event_description = forms.CharField(label='Event Description',
+                                        max_length=config.EVENT_DESCRIPTION_LENGTH,
+                                        widget=forms.widgets.Textarea(
+                                            attrs={'class': 'form-control', 'class': 'form-control'}))
+
+    event_max_guests = forms.IntegerField(label = "Maximum Number of Guests/Invitees",
+                                          widget=forms.widgets.TextInput(attrs={'class': 'form-control'}))
 
 
 class InviteForm(forms.Form):

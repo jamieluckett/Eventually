@@ -1,0 +1,15 @@
+<!-- \templates\new_public_event.html -->
+
+{% extends 'base.html' %}
+<html>
+	{% block content %}
+		<h2>Eventually - Create Public Event</h2>
+		<title>Eventually - Create Public Event</title>
+		<form method="post" >
+			{% csrf_token %}
+			{{form.as_p}}
+			<button class="btn btn-success ml-2" type="submit">Save</button>
+			<a href = ""><button class="btn btn-danger ml-2">Delete</button></a>
+		</form>
+	{% endblock %}
+</html>

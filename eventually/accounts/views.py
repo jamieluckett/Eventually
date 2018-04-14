@@ -1,11 +1,13 @@
 #/accounts/views.py
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.models import User
+from django.contrib.auth.views import LoginView, logout
 from django.core.validators import validate_email
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, FormView, CreateView
 
-from accounts.forms import EditGroupForm, CreateGroupForm, UserRegisterForm, CustomAuthenticationForm
+from accounts.forms import EditGroupForm, CreateGroupForm, UserRegisterForm, CustomAuthenticationForm, DeleteProfileForm
 from accounts.models import GuestGroup, GroupLine
 from event.guests import get_guest
 
@@ -128,3 +130,23 @@ class CustomLoginView(LoginView):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.form_class = CustomAuthenticationForm
+
+class DeleteProfieView(FormView):
+    form_class = DeleteProfileForm
+    template_name = "registration/delete.html"
+
+    def form_valid(self, form):
+        to_delete = (form['user_confirmation'].value() == "1")
+        if to_delete: #User said Yes
+            #Log User Out
+            userid = self.request.user.id
+            logout(self.request)
+
+            #Delete Account
+            User.objects.filter(id = userid)[0].delete()
+            self.success_url = ""
+            return super().form_valid(self)
+        else:
+            self.success_url = ".."
+            return super().form_valid(self)
+

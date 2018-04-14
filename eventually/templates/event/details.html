@@ -5,6 +5,11 @@
 	{% block content %}
 		<link rel="stylesheet" href="{% static "css/event.css"%}">
 		<title>Eventually - {{ event.event_name }} (Details)</title>
+
+		<div class="alert alert-warning" role="alert">
+  			<strong>Warning!</strong> Event is Unclaimed, please claim it below so than no one else may see this!
+		</div>
+
 		<h1>Event Details</h1>
 		<h4>Make sure to copy the url to keep the event!</h4>
 		
