@@ -26,6 +26,7 @@ class Event(models.Model):
     event_creator_id = models.IntegerField(default=0, help_text="ID")
     event_public = models.BooleanField(default=False, help_text="Whether the public can see this")
     event_description = models.CharField(max_length = config.EVENT_DESCRIPTION_LENGTH, default=config.EVENT_DEFAULT_DESCRIPTION)
+    event_maximum_guests = models.IntegerField(default=0, help_text="Maximum number of guests")
         
     def __str__(self):
         """Overwrites the models string return to make admin view pretty"""

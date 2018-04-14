@@ -12,7 +12,7 @@
 
 		<h1>Event Details</h1>
 		<h4>Make sure to copy the url to keep the event!</h4>
-		
+
 		<div class="event-entry">
 			<h2>{{ event.event_name }}</h2>
 			<p><b>Date:</b> {{ event.event_date }}</p>
@@ -39,11 +39,5 @@
 			<a href = "./claim" class = "btn btn-warning">Claim Event</a>
 		{% endif %}
 		<a href = "./delete"><button class="btn btn-danger">Delete Event</button></a>
-		
-	<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
-	<script>
-	var btn = document.getElementsByClassName('btn btn-outline-primary ml-2');
-    var clipboard = new ClipboardJS(btn);
-	</script>
-	{% endblock %}
+
 </html>

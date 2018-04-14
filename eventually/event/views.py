@@ -126,31 +126,48 @@ class EventDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        print("KWARGS", ) #for url
-        eventlines = []
-        # using a sql statement here over django queries because i find them easier to write + read
-        sql_query = ("""SELECT *
-    FROM event_guest
-    INNER JOIN event_eventline ON event_guest.id =event_eventline.guest_id_id
-    WHERE event_eventline.event_id_id = """ + str(context['object'].id)).replace("\n", " ")
-        # SELECT all Guest objects linked to this Event via EventLine
+        if not context['object'].event_public: #private event
+            eventlines = []
+            # using a sql statement here over django queries because i find them easier to write + read
+            sql_query = ("""SELECT *
+        FROM event_guest
+        INNER JOIN event_eventline ON event_guest.id =event_eventline.guest_id_id
+        WHERE event_eventline.event_id_id = """ + str(context['object'].id)).replace("\n", " ")
+            # SELECT all Guest objects linked to this Event via EventLine
 
-        context['guests'] = Guest.objects.raw(sql_query)  # add guests to context for template to use#
-        guests = []
-        for g in Guest.objects.raw(sql_query):
-            guests.append(g)
+            context['guests'] = Guest.objects.raw(sql_query)  # add guests to context for template to use#
+            guests = []
+            for g in Guest.objects.raw(sql_query):
+                guests.append(g)
 
-        for guest in guests:
-            eventlines.append(config.SITE_URL+EventLine.objects.filter(guest_id=guest.id)[0].get_absolute_url())
+            for guest in guests:
+                eventlines.append(config.SITE_URL+EventLine.objects.filter(guest_id=guest.id)[0].get_absolute_url())
 
-        context['url'] = config.SITE_URL + "/event/" + str(kwargs['object'].id) + "/"
-        context['eventlines'] = eventlines
+            context['url'] = config.SITE_URL + "/event/" + str(kwargs['object'].id) + "/"
+            context['eventlines'] = eventlines
+
+        else: #PUBLIC
+            self.template_name = "event/public_details.html"
+            pass
 
         return context
 
 class PublicEventCreateView(FormView):
     form_class = PublicEventForm
     template_name = "event/new_public_event.html"
+
+    def form_valid(self, form):
+        new_event = Event()
+        new_event.event_public = True
+        new_event.event_name = form['event_name'].value()
+        datetime_string = form['event_date'].value() + "," + form['event_time'].value()
+        new_event.event_date = datetime.strptime(datetime_string, '%Y-%m-%d,%H:%M')
+        new_event.event_description = form['event_description'].value()
+        new_event.maximum_guests = int(form['event_max_guests'].value())
+        new_event.save()
+        self.success_url = new_event.get_absolute_url()
+
+        return super().form_valid(form)
 
 class EventDetailRespondView(FormView, DetailView):
     """View used for invites to Events
