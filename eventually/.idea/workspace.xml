@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ced7dca9-0f51-416d-9cb2-e6b0d9d7c545" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/templates/registration/delete.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/registration/delete.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/user/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/user/profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/event/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/event/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/event/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/event/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/event/details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/event/details.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -24,6 +26,30 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/event/urls.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="16" column="92" selection-start-line="16" selection-start-column="92" selection-end-line="16" selection-end-column="92" />
+              <folding>
+                <element signature="e#17#45#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/event/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="454">
+              <caret line="350" column="21" selection-start-line="350" selection-start-column="21" selection-end-line="350" selection-end-column="21" />
+              <folding>
+                <element signature="e#18#55#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="profile.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/user/profile.html">
           <provider selected="true" editor-type-id="text-editor">
@@ -33,11 +59,32 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="delete.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="delete.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/registration/delete.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" column="131" selection-start-line="7" selection-start-column="131" selection-end-line="7" selection-end-column="131" />
+            <state relative-caret-position="300">
+              <caret line="20" column="7" lean-forward="true" selection-start-line="20" selection-start-column="7" selection-end-line="20" selection-end-column="7" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="details.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/event/details.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="465">
+              <caret line="46" column="34" lean-forward="true" selection-start-line="46" selection-start-column="34" selection-end-line="46" selection-end-column="34" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/event/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="304">
+              <caret line="36" column="8" selection-start-line="36" selection-start-column="8" selection-end-line="36" selection-end-column="24" />
+              <folding>
+                <element signature="e#18#46#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -63,8 +110,8 @@
       <find>formis</find>
       <find>redir</find>
       <find>allowed</find>
-      <find>Is goingIs going</find>
-      <find>Is going</find>
+      <find />
+      <find />
       <find>l</find>
       <find>yes_no_view_ur</find>
       <find>col-m</find>
@@ -81,7 +128,7 @@
       <find>form</find>
       <find>save(</find>
       <find>GET_URL</find>
-      <find>template_name = &quot;event/new.html&quot;</find>
+      <find />
       <find>HR</find>
       <find>redirect</find>
     </findStrings>
@@ -133,16 +180,16 @@
         <option value="$PROJECT_DIR$/event/forms.py" />
         <option value="$PROJECT_DIR$/templates/event/invite.html" />
         <option value="$PROJECT_DIR$/templates/event/invite_public.html" />
-        <option value="$PROJECT_DIR$/templates/event/details.html" />
         <option value="$PROJECT_DIR$/templates/event/new.html" />
         <option value="$PROJECT_DIR$/templates/event/new group.html" />
         <option value="$PROJECT_DIR$/templates/user/new_group.html" />
-        <option value="$PROJECT_DIR$/event/urls.py" />
         <option value="$PROJECT_DIR$/event/models.py" />
         <option value="$PROJECT_DIR$/templates/home.html" />
-        <option value="$PROJECT_DIR$/event/views.py" />
         <option value="$PROJECT_DIR$/templates/user/profile.html" />
         <option value="$PROJECT_DIR$/templates/registration/delete.html" />
+        <option value="$PROJECT_DIR$/event/urls.py" />
+        <option value="$PROJECT_DIR$/templates/event/details.html" />
+        <option value="$PROJECT_DIR$/event/views.py" />
       </list>
     </option>
   </component>
@@ -152,9 +199,9 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-20" />
-    <option name="y" value="-10" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-8" />
+    <option name="y" value="185" />
     <option name="width" value="1454" />
     <option name="height" value="886" />
   </component>
@@ -190,6 +237,12 @@
               <item name="eventually" type="b2602c69:ProjectViewProjectNode" />
               <item name="eventually" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="eventually" type="b2602c69:ProjectViewProjectNode" />
+              <item name="eventually" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="event" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="eventually" type="b2602c69:ProjectViewProjectNode" />
@@ -712,13 +765,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/eventually/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="22" column="10" selection-start-line="22" selection-start-column="10" selection-end-line="22" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/user/new_group.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -736,30 +782,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/event/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="25" column="114" lean-forward="true" selection-start-line="25" selection-start-column="114" selection-end-line="25" selection-end-column="114" />
-          <folding>
-            <element signature="e#17#45#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/home.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
           <caret line="24" column="79" selection-start-line="24" selection-start-column="79" selection-end-line="24" selection-end-column="79" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/event/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="42" column="26" lean-forward="true" selection-start-line="42" selection-start-column="26" selection-end-line="42" selection-end-column="26" />
-          <folding>
-            <element signature="e#18#46#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -770,23 +796,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/event/details.html">
+    <entry file="file://$PROJECT_DIR$/eventually/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="17" selection-start-line="15" selection-start-column="17" selection-end-line="15" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/event/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="427">
-          <caret line="202" column="17" lean-forward="true" selection-start-line="202" selection-start-column="17" selection-end-line="202" selection-end-column="17" />
-          <folding>
-            <element signature="e#18#55#0" expanded="true" />
-            <element signature="e#6272#7460#0" />
-            <element signature="e#7569#10948#0" />
-            <element signature="e#11012#11629#0" />
-          </folding>
+        <state relative-caret-position="315">
+          <caret line="22" column="10" selection-start-line="22" selection-start-column="10" selection-end-line="22" selection-end-column="10" />
         </state>
       </provider>
     </entry>
@@ -799,8 +812,45 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/registration/delete.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="131" selection-start-line="7" selection-start-column="131" selection-end-line="7" selection-end-column="131" />
+        <state relative-caret-position="300">
+          <caret line="20" column="7" lean-forward="true" selection-start-line="20" selection-start-column="7" selection-end-line="20" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/event/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" column="92" selection-start-line="16" selection-start-column="92" selection-end-line="16" selection-end-column="92" />
+          <folding>
+            <element signature="e#17#45#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/event/details.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="465">
+          <caret line="46" column="34" lean-forward="true" selection-start-line="46" selection-start-column="34" selection-end-line="46" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/event/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="36" column="8" selection-start-line="36" selection-start-column="8" selection-end-line="36" selection-end-column="24" />
+          <folding>
+            <element signature="e#18#46#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/event/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="454">
+          <caret line="350" column="21" selection-start-line="350" selection-start-column="21" selection-end-line="350" selection-end-column="21" />
+          <folding>
+            <element signature="e#18#55#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -337,3 +337,18 @@ class PublicEventDetailRespondView(FormView, DetailView):
 
     def form_valid(self, form, **kwargs):
         return super().form_valid(form)
+
+class EventClaimView(RedirectView):
+    def get(self, request, *args, **kwargs):
+        print("CLAIM")
+        pk = int(kwargs['pk']) #get key
+        self.object = self.get_object(pk)
+        self.object.event_creator_id = self.request.user.id
+        self.object.save()
+        return redirect(self.get_redirect_url())
+
+    def get_object(self, pk):
+        return Event.objects.get(id = pk)
+
+    def get_redirect_url(self):
+        return self.object.get_absolute_url()
