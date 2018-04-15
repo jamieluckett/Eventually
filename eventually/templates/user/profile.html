@@ -3,21 +3,41 @@
 {% load staticfiles %}
 <html>
 	{% block content %}
-		<link rel="stylesheet" href="{% static "css/event.css"%}">
-		<title> {{ user.username }} - User Profile</title>
-		<h1 class="display-4">User Profile</h1>
-		<h3>{{ user.username }}</h3>
-		<hr>
-		<p><b>Full Name</b> - {{ user.first_name }} {{ user.last_name }}</p>
-		<p><b>Email</b> - {{ user.email }}</p>
-		<p class="h4">Groups</p>
-		<hr>
-		<ul>
-		{% for group in groups %}
-			<li><a href="{% url 'group_detail' group.pk %}">{{ group.group_name }}</a></li>
-		{% endfor %}
-		</ul>
-		<a href = "../password_change"><button class="btn btn-primary">Change Password</button></a>
-		<a href = "./delete"><button class="btn btn-danger">Delete Account</button></a>
+	<title> {{ user.username }} - User Profile</title>
+				<h1 class="display-4">User Profile</h1>
+
+	<nav class="navbar-expand-md">
+		<div class="nav nav-tabs" id="nav-tab" role="tablist">
+			<a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">About Me</a>
+			<a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Groups</a>
+			<a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Events</a>
+		</div>
+	</nav>
+	<div class="tab-content" id="nav-tabContent">
+		<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+			<h3>{{ user.username }}</h3><hr>
+			<p><b>Full Name</b> - {{ user.first_name }} {{ user.last_name }}</p>
+			<p><b>Email</b> - {{ user.email }}</p>
+			<a href = "../password_change"><button class="btn btn-primary">Change Password</button></a>
+			<a href = "./delete"><button class="btn btn-danger">Delete Account</button></a>
+		</div>
+		<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+			<h3>Groups<h3><hr>
+			<ul>
+			{% for group in groups %}
+				<li><a href="{% url 'group_detail' group.pk %}">{{ group.group_name }}</a></li>
+			{% endfor %}
+			</ul>
+		</div>
+		<div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+			<h3>Events</h3><hr>
+			<ul>
+			{% for event in events %}
+				<li><a href="{% url 'event_detail' event.pk event.event_key %}">{{ event.event_name }}</a></li>
+			{% endfor %}
+			</ul>
+		</div>
+	</div>
+	<nav>
 	{% endblock %}
 </html>
