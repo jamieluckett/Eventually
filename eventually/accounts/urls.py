@@ -10,6 +10,8 @@ urlpatterns = [
     path('register/', views.RegisterView.as_view(), name='register'),
     path('', RedirectView.as_view(pattern_name='profile'), name = 'profile'),
     path('profile/', views.UserProfieView.as_view(), name='profile'),
+    path('profile/analytics', views.UserAnalyticsView.as_view(), name='analytics_home'),
+    path('profile/analytics/<int:pk>', views.UserEventAnalyticsView.as_view(), name='analytics_event'),
     path('profile/delete/', views.DeleteProfieView.as_view(), name='delete_profile'),
     path('profile/groups/<int:pk>', views.GroupDetailView.as_view(), name='group_detail'),
     path('profile/groups/new', views.CreateGroupView.as_view(), name='new_group'),

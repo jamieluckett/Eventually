@@ -10,6 +10,8 @@ from django.views.generic import DetailView, FormView, CreateView
 from accounts.forms import EditGroupForm, CreateGroupForm, UserRegisterForm, CustomAuthenticationForm, DeleteProfileForm
 from accounts.models import GuestGroup, GroupLine
 from event.guests import get_guest
+from event.models import Event
+
 
 def is_email(address):
     """Checks whether address string is a valid email"""
@@ -150,3 +152,10 @@ class DeleteProfieView(FormView):
             self.success_url = ".."
             return super().form_valid(self)
 
+class UserAnalyticsView(DetailView):
+    model = User
+    template_name = "analytics/home.html"
+
+class UserEventAnalyticsView(DetailView):
+    model = Event
+    template_name = "analytics/event.html"

@@ -352,3 +352,19 @@ class EventClaimView(RedirectView):
 
     def get_redirect_url(self):
         return self.object.get_absolute_url()
+
+class GuestDeleteView(RedirectView):
+    """Redirect view that deletes EventLine"""
+    def get(self, request, *args, **kwargs):
+        print("DELETE GUEST")
+        print(args, kwargs, sep="\n")
+        invite_key = kwargs['invite_key']
+
+        self.object = self.get_object(invite_key)
+        self.object.delete()
+        return redirect(Event.objects.get(id = kwargs['pk']).get_absolute_url())
+
+        return redirect("home")
+
+    def get_object(self, rq_invite_key):
+        return EventLine.objects.get(invite_key = rq_invite_key)

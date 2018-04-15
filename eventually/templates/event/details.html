@@ -36,13 +36,19 @@
 				{% endif %}/{% if g.seen %} Seen
 				{% else %} Not Seen
 				{% endif %}
-			<button data-clipboard-text="{{ url |add:g.invite_key }}" class="btn btn-outline-primary ml-2">Copy Invite</button> <button class="btn btn-outline-danger"">Delete Guest</button>
+
+			<button data-clipboard-text="{{ url | add:g.invite_key }}" class="btn btn-outline-primary ml-2">
+				Copy Invite
+			</button>
+			<a href="{{url}}detail/{{ event.event_key }}/delete/{{ g.invite_key }}" class="btn btn-outline-danger">
+				Delete Guest
+			</a>
 		{% endfor %}
 		<hr>
-		{% if user.is_authenticated %}
+		{% if user.is_authenticated and event.event_creator_id == 0 %}
 			<a href = "claim" class = "btn btn-warning">Claim Event</a>
 		{% endif %}
-		<a href = "./delete"><button class="btn btn-danger">Delete Event</button></a>
+		<a href = "delete"><button class="btn btn-danger">Delete Event</button></a>
 		
 	<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
 	<script>
