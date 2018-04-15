@@ -8,9 +8,8 @@
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 		<link rel="stylesheet" href="{% static "css/base.css"%}">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-
 	</head>
+
 	<body>
 		<main role="main">
 			<nav class="navbar-expand-md navbar-dark bg-dark">
@@ -26,6 +25,9 @@
 						
 						<a class="nav-item nav-link active" href="/">Home<span class="sr-only">(current)</span></a>
 						<a class="nav-item nav-link" href="/event/new">Create Event</a>
+						{% if user.is_authenticated %}
+							<a class="nav-item nav-link" href="/event/new_public">Create Public Event</a>
+						{% endif %}
 						
 						<a class="nav-item nav-link disabled" href="/event/key">Respond to Invite</a>
 						{% if user.is_authenticated %}
@@ -46,19 +48,16 @@
 			</nav>
 
 			<div class="container vertical-centre">
-								<div class="container" >
-										<br class="row">
-												<div class="col-md-10">
-														{% block content %}
-							{% endblock %}
-							<br></br><br></br>
-												</div>
-										</div>
-								</div> <!-- /container -->
-						</div>
-
-
-
+				<div class="container" >
+					<br class="row">
+					<div class="col-md-10">
+						{% block content %}
+						{% endblock %}
+						<br></br><br></br>
+					</div>
+				</div>
+			</div> <!-- /container -->
+			</div>
 
 			<nav class="navbar fixed-bottom">
 				<!--/.Footer Links-->

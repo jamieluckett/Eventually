@@ -83,5 +83,12 @@ class PublicEventForm(forms.Form):
 
 class InviteForm(forms.Form):
     """Form for invited Guest to respond to Event invite"""
-    is_going = forms.ChoiceField(label="Can you go", choices=(('1', 'Going'), ('0', 'Not Going'), ('2', 'Maybe')),
-                                 widget=forms.RadioSelect)
+    is_going = forms.ChoiceField(label="Can you go",
+                    choices=(('1', 'Going'), ('0', 'Not Going'), ('2', 'Maybe')),
+                    widget=forms.RadioSelect)
+
+class PublicInviteForm(forms.Form):
+    """Form for invited Guest to respond to Event invite"""
+    email = forms.CharField(label='Interested in going? Enter your email below!',
+                    max_length=100,
+                    widget=forms.widgets.TextInput(attrs={'class': 'form-control'}))

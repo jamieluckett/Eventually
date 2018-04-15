@@ -3,8 +3,10 @@
 {% extends 'base.html' %}
 <html>
 	{% block content %}
-		<h2>Create Event</h2>
 		<title>Eventually - Create Event</title>
+		<h1>Create Event</h1>
+		<hr>
+
 		<form method="post" >
 			{% csrf_token %}
 			{{form.as_p}}

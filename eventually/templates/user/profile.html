@@ -5,17 +5,18 @@
 	{% block content %}
 		<link rel="stylesheet" href="{% static "css/event.css"%}">
 		<title> {{ user.username }} - User Profile</title>
-		<h1>User Profile</h1>
-		<h3>{{ user.username }}</h3>	
-		<p><b>Email</b> - {{ user.email }}</p>
+		<h1 class="display-4">User Profile</h1>
+		<h3>{{ user.username }}</h3>
+		<hr>
 		<p><b>Full Name</b> - {{ user.first_name }} {{ user.last_name }}</p>
-		<h4>Groups</h4>
+		<p><b>Email</b> - {{ user.email }}</p>
+		<p class="h4">Groups</p>
+		<hr>
 		<ul>
 		{% for group in groups %}
 			<li><a href="{% url 'group_detail' group.pk %}">{{ group.group_name }}</a></li>
 		{% endfor %}
 		</ul>
-		<br></br>
 		<a href = "../password_change"><button class="btn btn-primary">Change Password</button></a>
 		<a href = "./delete"><button class="btn btn-danger">Delete Account</button></a>
 	{% endblock %}

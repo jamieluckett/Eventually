@@ -4,9 +4,9 @@
 <html>
 	{% block content %}
 		<title>Eventually - {{ group.group_name }} (Details)</title>
-		<h1>Group Details</h1>
 		<h2>{{ guestgroup.group_name }}</h2>
 		<h3>Guests</h3>
+	<hr>
 		<ul>
 			{% for guest in guests %}
 				<li>{{ guest }}</li>

@@ -27,6 +27,7 @@ class Event(models.Model):
     event_public = models.BooleanField(default=False, help_text="Whether the public can see this")
     event_description = models.CharField(max_length = config.EVENT_DESCRIPTION_LENGTH, default=config.EVENT_DEFAULT_DESCRIPTION)
     event_maximum_guests = models.IntegerField(default=0, help_text="Maximum number of guests")
+    event_state = models.IntegerField(default=0, help_text="0 - Open, 1 - Paused, 2 - Closed")
         
     def __str__(self):
         """Overwrites the models string return to make admin view pretty"""
@@ -34,7 +35,10 @@ class Event(models.Model):
         #ID - Name
         
     def get_absolute_url(self):
-        return reverse('event_detail', args = [self.id])
+        if self.event_public:
+            return reverse('event_public_invite', args=[self.id])
+        else:
+            return reverse('event_detail', args = [self.id, self.event_key])
     
 class Guest(models.Model):
     """Defines Guest table"""

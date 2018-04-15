@@ -6,12 +6,45 @@
 		<link rel="stylesheet" href="{% static "css/event.css"%}">
 		<title>Eventually - {{ event.event_name }} (Details)</title>
 
-		<div class="alert alert-warning" role="alert">
-  			<strong>Warning!</strong> Event is Unclaimed, please claim it below so that no one else may see this!
-		</div>
+		<div>
+			<div class="alert alert-primary alert-dismissible fade show" role="alert">
+				<strong>This event is public</strong>, it is currently visable on the home page to all users.
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				 </button>
+			</div>
+
+			{% if event.event_state == 0 %} <!– Open –>
+
+			<div class="alert alert-success alert-dismissible fade show" role="alert">
+				<strong>This event is open</strong>, it is still taking responses.
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				 </button>
+			</div>
+
+			{% elif event.event_state == 1 %} <!– Paused –>
+
+			<div class="alert alert-warning alert-dismissible fade show" role="alert">
+				<strong>This event is paused</strong>, it is not currently taking responses.
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				 </button>
+			</div>
+
+			{% elif event.event_state == 2 %} <!– Closed –>
+
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong>This event is closed</strong>, it will not currently take further responses.
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				 </button>
+			</div>
+			{% endif %}
+		</div> <!– Alerts –>
 
 		<h1>Event Details</h1>
-		<h4>Make sure to copy the url to keep the event!</h4>
+		<hr>
 
 		<div class="event-entry">
 			<h2>{{ event.event_name }}</h2>
@@ -19,25 +52,21 @@
 			<p><b>Date Created:</b> {{ event.event_date_created }}</p>
 			<p><b>Description:</b> {{ event.event_description }}</p>
 		</div>
-
-		<h5>Guest List</h5>
-		{% for g in guests %}
-			<b><p class =
-				{% if g.seen and g.going %} "seen-going-guest"
-				{% elif g.seen %} "seen-guest"
-				{% elif g.going %} "going-guest"
-				{% else %} "unseen-guest" {% endif %}>{{ g.email_address }}</b> -
-				{% if g.going %} Going
-				{% else %} Not Going
-				{% endif %}/{% if g.seen %} Seen
-				{% else %} Not Seen
-				{% endif %}
-			<button data-clipboard-text="{{ url |add:g.invite_key }}" class="btn btn-outline-primary ml-2">Copy Invite</button> <button class="btn btn-outline-danger"">Delete Guest</button>
-		{% endfor %}
-	<br></br>
-		{% if user.is_authenticated %}
-			<a href = "./claim" class = "btn btn-warning">Claim Event</a>
-		{% endif %}
-		<a href = "./delete"><button class="btn btn-danger">Delete Event</button></a>
-
+		<hr>
+		<div>
+			{% if event.event_state == 0 %} <!– Open –>
+				<button class="btn btn-success" disabled>Open Event</button>
+				<button class="btn btn-warning">Pause Event</button>
+				<button class="btn btn-danger">Close Event</button>
+			{% elif event.event_state == 1 %} <!– Paused –>
+				<button class="btn btn-success">Open Event</button>
+				<button class="btn btn-warning" disabled>Pause Event</button>
+				<button class="btn btn-danger">Close Event</button>
+			{% elif event.event_state == 2 %} <!– Closed –>
+				<button class="btn btn-success">Open Event</button>
+				<button class="btn btn-warning">Pause Event</button>
+				<button class="btn btn-danger" disabled>Close Event</button>
+			{% endif %}
+		</div> <!– Buttons –>
+	{% endblock %}
 </html>

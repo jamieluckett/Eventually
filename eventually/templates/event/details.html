@@ -6,15 +6,19 @@
 		<link rel="stylesheet" href="{% static "css/event.css"%}">
 		<title>Eventually - {{ event.event_name }} (Details)</title>
 
-		<div class="alert alert-warning" role="alert">
-  			<strong>Warning!</strong> Event is Unclaimed, please claim it below so that no one else may see this!
+		{% if event.event_creator_id == 0%}
+		<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  			<strong>Event is unclaimed</strong>, please claim it below so that no one else may see this!
+  			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    			<span aria-hidden="true">&times;</span>
+ 			 </button>
 		</div>
+		{% endif %}
 
 		<h1>Event Details</h1>
-		<h4>Make sure to copy the url to keep the event!</h4>
-		
+		<hr>
 		<div class="event-entry">
-			<h2>{{ event.event_name }}</h2>
+			<p class="h2">{{ event.event_name }}</p>
 			<p><b>Date:</b> {{ event.event_date }}</p>
 			<p><b>Date Created:</b> {{ event.event_date_created }}</p>
 			<p><b>Description:</b> {{ event.event_description }}</p>
@@ -34,7 +38,7 @@
 				{% endif %}
 			<button data-clipboard-text="{{ url |add:g.invite_key }}" class="btn btn-outline-primary ml-2">Copy Invite</button> <button class="btn btn-outline-danger"">Delete Guest</button>
 		{% endfor %}
-	<br></br>
+		<hr>
 		{% if user.is_authenticated %}
 			<a href = "./claim" class = "btn btn-warning">Claim Event</a>
 		{% endif %}

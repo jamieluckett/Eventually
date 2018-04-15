@@ -3,10 +3,18 @@
 {% extends 'base.html' %}
 <html>
 	{% block content %}
+
+
 		<title>Eventually - Create Public Event</title>
-		<div class="alert alert-primary" role="alert">
-  			This event will be public, meaning it will appear on the front-page to all users!
+
+		<div class="alert alert-primary alert-dismissible fade show" role="alert">
+  			<strong>This event will be public</strong>, meaning it will appear on the front-page to all users!
+  			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    			<span aria-hidden="true">&times;</span>
+ 			 </button>
 		</div>
+
+
 		<h2>Eventually - Create Public Event</h2>
 		<form method="post">
 			{% csrf_token %}
