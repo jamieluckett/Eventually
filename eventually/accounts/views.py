@@ -9,7 +9,7 @@ from django.views.generic import DetailView, FormView, CreateView
 
 from accounts.forms import EditGroupForm, CreateGroupForm, UserRegisterForm, CustomAuthenticationForm, DeleteProfileForm
 from accounts.models import GuestGroup, GroupLine
-from event.guests import get_guest
+from event.model_functions import get_guest
 from event.models import Event
 
 
@@ -156,6 +156,6 @@ class UserAnalyticsView(DetailView):
     model = User
     template_name = "analytics/home.html"
 
-class UserEventAnalyticsView(DetailView):
+class EventAnalyticsView(DetailView):
     model = Event
-    template_name = "analytics/event.html"
+    template_name = "charts/event_chart.html"

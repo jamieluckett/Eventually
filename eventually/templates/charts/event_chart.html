@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+	{% block extrahead %}
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js" type="text/javascript"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript"></script>
+	{% endblock %}
+
+{% block content %}
+	<canvas id="myChart" width="400" height="400"></canvas>
+	<script>
+		var ctx = document.getElementById("myChart").getContext('2d');
+		new Chart(document.getElementById("myChart"),
+			{"type":"line",
+			"data":{"labels":["January","February","March","April","May","June","July"],
+			"datasets":[{"label":"My First Dataset","data":[65,59,80,81,56,55,40],"fill":false,"borderColor":"rgb(75, 192, 192)","lineTension":0.1}]},
+			"options":{}});</script>
+	</script>
+{% endblock %}

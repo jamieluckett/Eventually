@@ -3,7 +3,7 @@
 from django.contrib import admin
 
 from accounts.models import EventOwnerLine, GroupLine, GuestGroup
-from .models import Event, Guest, EventLine, InterestedLine
+from .models import Event, Guest, EventLine, InterestedLine, DailyStats
 
 # Register your models here.
 #Event Models
@@ -16,3 +16,4 @@ admin.site.register(InterestedLine)
 admin.site.register(GuestGroup)
 admin.site.register(GroupLine)
 admin.site.register(EventOwnerLine)
+admin.site.register(DailyStats)

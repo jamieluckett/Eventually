@@ -5,12 +5,11 @@ from django.views.generic import ListView, FormView, DetailView, CreateView, Red
 from django.core.validators import validate_email
 
 from accounts.models import GuestGroup, GroupLine
-from event import guests
+from event import model_functions
 from .models import Event, Guest, EventLine, InterestedLine
 from .forms import *
 from datetime import datetime
 import config
-
 
 def is_email(address):
     try:
@@ -221,7 +220,6 @@ class PublicEventDetailView(DetailView):
         context['interested_lines'] = interested_lines
         return context
 
-
 class EventDetailRespondView(FormView, DetailView):
     """View used for invites to Events
     A combination of a FormView and a DetailView"""
@@ -330,6 +328,8 @@ class PublicEventRespondView(FormView, DetailView):
             #Take user to detail page
             return redirect("event_public_detail", pk, self.get_object().event_key)
         else:
+            #+1 To Daily Views
+            model_functions.increment_event_view(pk)
             return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -350,9 +350,10 @@ class PublicEventRespondView(FormView, DetailView):
         email_address = form['response_email'].value()
 
         new_interested_line = InterestedLine()
-        new_interested_line.guest_id = guests.get_guest(email_address)
+        new_interested_line.guest_id = model_functions.get_guest(email_address)
         new_interested_line.event_id = self.get_object()
         new_interested_line.save()
+        model_functions.increment_stat_register(self.get_object().id)
         return HttpResponseRedirect(self.success_url)
 
 class EventClaimView(RedirectView):
