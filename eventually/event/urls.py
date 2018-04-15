@@ -19,8 +19,8 @@ urlpatterns = [
     path('event/<int:pk>/detail/<str:key>', views.EventDetailView.as_view(), name='event_detail'),
     path('event/<int:pk>/<str:key>', views.EventDetailRespondView.as_view(), name='event_invite'),
 
-    path('event/public/<int:pk>/', views.PublicEventDetailRespondView.as_view(), name='event_public_invite'),
-    path('event/public/<int:pk>/detail', views.PublicEventDetailView.as_view(), name='event_public_detail'),
+    path('event/public/<int:pk>/', views.PublicEventRespondView.as_view(), name='event_public_invite'),
+    path('event/public/<int:pk>/detail/<str:key>', views.PublicEventDetailView.as_view(), name='event_public_detail'),
 
     path('event/key', views.EnterKeyFormView.as_view(), name='key_enter'),
 

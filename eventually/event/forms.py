@@ -89,6 +89,5 @@ class InviteForm(forms.Form):
 
 class PublicInviteForm(forms.Form):
     """Form for invited Guest to respond to Event invite"""
-    email = forms.CharField(label='Interested in going? Enter your email below!',
-                    max_length=100,
+    response_email = forms.CharField(label='Interested in going? Enter your email below!',
                     widget=forms.widgets.TextInput(attrs={'class': 'form-control'}))

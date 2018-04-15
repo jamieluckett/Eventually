@@ -36,7 +36,7 @@ class Event(models.Model):
         
     def get_absolute_url(self):
         if self.event_public:
-            return reverse('event_public_invite', args=[self.id])
+            return reverse('event_public_invite', args=[self.id, self.event_key])
         else:
             return reverse('event_detail', args = [self.id, self.event_key])
     
@@ -85,3 +85,4 @@ class InterestedLine(models.Model):
     event_id = models.ForeignKey(Event, on_delete=models.CASCADE)
     guest_id = models.ForeignKey(Guest, on_delete=models.CASCADE)
     interested = models.BooleanField(default=False)
+    interest_key = models.CharField(default = generate_key, max_length=config.EVENT_KEY_LENGTH)

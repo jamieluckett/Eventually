@@ -45,13 +45,22 @@
 
 		<h1>Event Details</h1>
 		<hr>
-
 		<div class="event-entry">
 			<h2>{{ event.event_name }}</h2>
 			<p><b>Date:</b> {{ event.event_date }}</p>
 			<p><b>Date Created:</b> {{ event.event_date_created }}</p>
 			<p><b>Description:</b> {{ event.event_description }}</p>
 		</div>
+
+		{% if interested_lines|length != 0 %}
+			<p><b>Interested List:</b></p>
+			<ul>
+			{% for line in interested_lines %}
+				<li>{{ line.guest_id }}</li>
+			{% endfor %}
+			</ul>
+		{% endif %}
+
 		<hr>
 		<div>
 			{% if event.event_state == 0 %} <!– Open –>

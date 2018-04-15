@@ -6,15 +6,14 @@
 		<link rel="stylesheet" href="{% static "css/event.css"%}">
 		<title>Eventually - {{ event.event_name }} (Details)</title>
 
-		{% if event.event_creator_id == 0%}
-		<div class="alert alert-warning alert-dismissible fade show" role="alert">
-  			<strong>Event is unclaimed</strong>, please claim it below so that no one else may see this!
+		{% if event.event_creator_id == 0 %}
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  			<strong>Event is unclaimed</strong>, please login/create an account and claim it below so that no one else may see this!
   			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
     			<span aria-hidden="true">&times;</span>
  			 </button>
 		</div>
 		{% endif %}
-
 		<h1>Event Details</h1>
 		<hr>
 		<div class="event-entry">
@@ -24,7 +23,7 @@
 			<p><b>Description:</b> {{ event.event_description }}</p>
 		</div>
 
-		<h5>Guest List</h5>
+		<p><b>Guest List:</b></p>
 		{% for g in guests %}
 			<b><p class =
 				{% if g.seen and g.going %} "seen-going-guest"
@@ -47,12 +46,16 @@
 		<hr>
 		{% if user.is_authenticated and event.event_creator_id == 0 %}
 			<a href = "claim" class = "btn btn-warning">Claim Event</a>
+		{% else %}
+			<button data-clipboard-text="{{ url }}detail/{{ event.event_key }}" class="btn btn-primary ml-2">
+				Copy URL
+			</button>
 		{% endif %}
 		<a href = "delete"><button class="btn btn-danger">Delete Event</button></a>
 		
 	<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
 	<script>
-	var btn = document.getElementsByClassName('btn btn-outline-primary ml-2');
+	var btn = document.getElementsByClassName('btn');
     var clipboard = new ClipboardJS(btn);
 	</script>
 	{% endblock %}

@@ -1,11 +1,12 @@
 # \event\views.py
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
-from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, FormView, DetailView, CreateView, TemplateView, RedirectView
+from django.views.generic import ListView, FormView, DetailView, CreateView, RedirectView
 from django.core.validators import validate_email
 
 from accounts.models import GuestGroup, GroupLine
-from .models import Event, Guest, EventLine
+from event import guests
+from .models import Event, Guest, EventLine, InterestedLine
 from .forms import *
 from datetime import datetime
 import config
@@ -214,6 +215,13 @@ class PublicEventDetailView(DetailView):
         else:
             return redirect("event_public_invite", pk)
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(DetailView, self).get_context_data()
+        interested_lines = list(InterestedLine.objects.filter(event_id = self.get_object()))
+        context['interested_lines'] = interested_lines
+        return context
+
+
 class EventDetailRespondView(FormView, DetailView):
     """View used for invites to Events
     A combination of a FormView and a DetailView"""
@@ -304,22 +312,23 @@ WHERE event_event.id = event_eventline.event_id_id AND event_eventline.invite_ke
         print(pk, key)
         return self.kwargs['key'] + "/redir"
 
-class PublicEventDetailRespondView(FormView, DetailView):
+class PublicEventRespondView(FormView, DetailView):
+    """View used when a user looks at a public event"""
     template_name = "event/invite_public.html"
     model = Event
     form_class = PublicInviteForm
-    success_url = ""
+    success_url = "/"
     event_line = None
 
     def get(self, request, *args, **kwargs):
+        print("PublicEventRespondView")
         pk = int(kwargs['pk'])
         print("PK:",pk)
-        print(self.get_object().event_creator_id, "vs", self.request.user.id)
-
         if self.get_object().event_creator_id == self.request.user.id:
             #Event belongs to user
             print("Public Event belongs to", self.request.user)
-            return redirect("event_public_detail", pk)
+            #Take user to detail page
+            return redirect("event_public_detail", pk, self.get_object().event_key)
         else:
             return super().get(request, *args, **kwargs)
 
@@ -336,16 +345,30 @@ class PublicEventDetailRespondView(FormView, DetailView):
             return self.form_invalid(form, **kwargs)
 
     def form_valid(self, form, **kwargs):
-        return super().form_valid(form)
+        print("Recieved form input")
+        print(form['response_email'].value())
+        email_address = form['response_email'].value()
+
+        new_interested_line = InterestedLine()
+        new_interested_line.guest_id = guests.get_guest(email_address)
+        new_interested_line.event_id = self.get_object()
+        new_interested_line.save()
+        return HttpResponseRedirect(self.success_url)
 
 class EventClaimView(RedirectView):
     def get(self, request, *args, **kwargs):
         print("CLAIM")
         pk = int(kwargs['pk']) #get key
         self.object = self.get_object(pk)
-        self.object.event_creator_id = self.request.user.id
-        self.object.save()
-        return redirect(self.get_redirect_url())
+        if self.object.event_creator_id == 0:
+            #Event Ownerless
+
+            self.object.event_creator_id = self.request.user.id
+            self.object.save()
+            return redirect(self.get_redirect_url())
+        else:
+            #Event already has an owner!!
+            return redirect("home")
 
     def get_object(self, pk):
         return Event.objects.get(id = pk)
@@ -359,10 +382,18 @@ class GuestDeleteView(RedirectView):
         print("DELETE GUEST")
         print(args, kwargs, sep="\n")
         invite_key = kwargs['invite_key']
-
-        self.object = self.get_object(invite_key)
-        self.object.delete()
-        return redirect(Event.objects.get(id = kwargs['pk']).get_absolute_url())
+        if self.object.event_creator_id != 0:
+            if self.object.event_creator_id == self.request.user.id:
+                self.object = self.get_object(invite_key)
+                self.object.delete()
+                return redirect(Event.objects.get(id = kwargs['pk']).get_absolute_url())
+            else:
+                #Event has owner, not currently logged in
+                pass
+        else:
+            self.object = self.get_object(invite_key)
+            self.object.delete()
+            return redirect(Event.objects.get(id=kwargs['pk']).get_absolute_url())
 
         return redirect("home")
 
