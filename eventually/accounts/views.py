@@ -5,7 +5,7 @@ from django.core.validators import validate_email
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import DetailView, FormView, CreateView
+from django.views.generic import DetailView, FormView, CreateView, RedirectView
 
 from accounts.forms import EditGroupForm, CreateGroupForm, UserRegisterForm, CustomAuthenticationForm, DeleteProfileForm
 from accounts.models import GuestGroup, GroupLine
@@ -40,7 +40,6 @@ class RegisterView(CreateView):
         self.object.last_name = form['last_name'].value()
         self.object.save(force_update=True)
 
-        print("REEEEEEEEEEEEEEEEEEEEEEEEEE")
         return to_return
 
 class UserProfieView(DetailView):
@@ -48,6 +47,7 @@ class UserProfieView(DetailView):
     template_name = 'user/profile.html'
 
     def get_object(self):
+        #Get user object
         return self.request.user
 
     def get_context_data(self, **kwargs):
@@ -69,6 +69,13 @@ class CreateGroupView(FormView):
     template_name = "user/new_group.html"
     form_class = CreateGroupForm
     success_url = "/"
+
+    def get(self, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return super(FormView, self).get(args, kwargs)
+        else:
+            #User is not logged in!!
+            return HttpResponseRedirect('../../..')
 
     def form_valid(self, form):
         """Run when form input is valid, creates Group and GroupLines"""
@@ -129,7 +136,7 @@ class GroupDetailView(DetailView):
         guests = []
         for i in range(len(GroupLines)):
             guests.append(GroupLines[i].guest_id)
-        context['guests'] = guests
+        context['group_lines'] = GroupLines
         print("Context\n",context)
         return context
 
@@ -143,9 +150,13 @@ class GroupEditView(CreateView):
 class CustomLoginView(LoginView):
     """View used in User logins
     Based on LoginView but with a custom form to allow for Bootstrap styling"""
+
     def __init__(self, *args, **kwargs):
+        print("CUSTOM LOGIN VIEW")
         super().__init__(*args, **kwargs)
+        print(self.__dir__())
         self.form_class = CustomAuthenticationForm
+        print("INIT DONE")
 
 class DeleteProfieView(FormView):
     form_class = DeleteProfileForm
@@ -166,6 +177,23 @@ class DeleteProfieView(FormView):
             self.success_url = ".."
             return super().form_valid(self)
 
+class DeleteGroupMemberView(RedirectView):
+    def get(self, request, *args, **kwargs):
+        print("DELETEGROUPMEMBERVIEW")
+        print(kwargs)
+        pk = int(kwargs['pk']) #get key
+        key = kwargs['key']
+
+        self.object = self.get_object(key)
+        self.object.delete()
+        return redirect(GuestGroup.objects.get(id = pk).get_absolute_url())
+
+    def get_object(self, key):
+        return GroupLine.objects.get(group_line_key = key)
+
+    def get_redirect_url(self):
+        return self.object.get_absolute_url()
+
 class UserAnalyticsView(DetailView):
     model = User
     template_name = "analytics/home.html"
@@ -179,3 +207,21 @@ class EventAnalyticsView(DetailView):
         context['views'], context['registrations'], context['days'] = get_stat_list(self.get_object().id)
         context['doughnut_data'] = [sum(context['views']), sum(context['views']) - sum(context['registrations'])]
         return context
+
+class DeleteGroupView(FormView):
+    form_class = DeleteProfileForm
+    template_name = "user/delete_group.html"
+    success_url = ""
+
+    def form_valid(self, form, *args, **kwargs):
+        pk = self.kwargs['pk']
+        print(pk)
+        group = GuestGroup.objects.get(id = pk)
+        to_delete = (form['user_confirmation'].value() == "1")
+        if to_delete: #User said Yes
+            group.delete()
+            self.success_url = ""
+            return redirect("home")
+        else:
+            self.success_url = ""
+            return redirect("home")

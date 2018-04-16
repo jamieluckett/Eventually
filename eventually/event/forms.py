@@ -1,6 +1,7 @@
 # \event\forms.py
 # Defines Django Forms
 from django.forms import CheckboxSelectMultiple
+from django.utils import timezone
 
 import config
 from django import forms
@@ -30,7 +31,9 @@ class EventForm(forms.Form):
 								 widget = forms.widgets.TextInput(attrs={'class': 'form-control'}))
 
     event_date = forms.DateField(label="Event Date",
-                                 widget=forms.widgets.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+                                 widget=forms.widgets.DateInput(attrs={'type': 'date',
+                                                                       'class': 'form-control',
+                                                                       "min": timezone.now().strftime("%Y-%m-%d")}),
                                  input_formats=settings.DATE_INPUT_FORMATS)
 
     event_time = forms.TimeField(label="Event Time",
@@ -42,10 +45,12 @@ class EventForm(forms.Form):
 
 
     event_guests = forms.CharField(label='Event Guests (csv)',
-                                   max_length=config.EVENT_MAX_GUESTS * config.GUEST_EMAIL_LENGTH,
-                                   widget=forms.widgets.Textarea(attrs={'class': 'form-control', 'class': 'form-control'}))
+                                    max_length=config.EVENT_MAX_GUESTS * config.GUEST_EMAIL_LENGTH,
+                                    widget=forms.widgets.Textarea(attrs={'class': 'form-control'}))
 
-    groups = forms.MultipleChoiceField(choices=[], widget=CheckboxSelectMultiple(attrs={'class': 'form-control'}), required=False)
+    groups = forms.MultipleChoiceField(choices=[],
+                                       widget=CheckboxSelectMultiple(attrs={'class': 'form-control'}),
+                                       required=False)
 
     def __init__(self, *args, **kwargs):
         # https://stackoverflow.com/questions/47363190/from-the-view-how-do-i-pass-custom-choices-into-a-forms-choicefield
@@ -66,7 +71,9 @@ class PublicEventForm(forms.Form):
                                  widget=forms.widgets.TextInput(attrs={'class': 'form-control'}))
 
     event_date = forms.DateField(label="Event Date",
-                                 widget=forms.widgets.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+                                 widget=forms.widgets.DateInput(attrs={'type': 'date',
+                                                                       'class': 'form-control',
+                                                                       "min": timezone.now().strftime("%Y-%m-%d")}),
                                  input_formats=settings.DATE_INPUT_FORMATS)
 
     event_time = forms.TimeField(label="Event Time",
@@ -91,3 +98,12 @@ class PublicInviteForm(forms.Form):
     """Form for invited Guest to respond to Event invite"""
     response_email = forms.CharField(label='Interested in going? Enter your email below!',
                     widget=forms.widgets.TextInput(attrs={'class': 'form-control'}))
+
+    def __init__(self, *args, **kwargs):
+        email = group_names = kwargs.pop('email')
+        to_return = super(forms.Form, self).__init__(*args, **kwargs)
+        if email != None:
+            self.fields['response_email'].widget.attrs.update({'placeholder': email})
+        return to_return
+
+

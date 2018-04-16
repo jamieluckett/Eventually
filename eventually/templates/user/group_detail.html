@@ -3,14 +3,17 @@
 {% load staticfiles %}
 <html>
 	{% block content %}
-		<title>Eventually - {{ group.group_name }} (Details)</title>
+		<title>Eventually - {{ guestgroup.group_name }} (Details)</title>
+		<h1>Group Details</h1><hr>
 		<h2>{{ guestgroup.group_name }}</h2>
-		<h3>Guests</h3>
-	<hr>
+		<p><b>Members:</b></p>
 		<ul>
-			{% for guest in guests %}
-				<li>{{ guest }}</li>
+			{% for group_line in group_lines %}
+				<li>{{ group_line.guest_id }} &emsp; <a href="{{group_line.group_id.id}}/delete/{{group_line.group_line_key}}" class="btn btn-outline-danger">Delete Guest</a></li>
 			{% endfor %}
-		</ul>
+		</ul><hr>
+
+	<a href="" class="btn btn-primary">Add Guest(s)</a>
+	<a href="{{guestgroup.id}}/delete" class="btn btn-danger">Delete Group</a>
 	{% endblock %}
 </html>

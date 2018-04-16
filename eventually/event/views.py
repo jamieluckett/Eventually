@@ -1,9 +1,11 @@
 # \event\views.py
+from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.views.generic import ListView, FormView, DetailView, CreateView, RedirectView
 from django.core.validators import validate_email
 
+from accounts.forms import DeleteProfileForm
 from accounts.models import GuestGroup, GroupLine
 from event import model_functions
 from .models import Event, Guest, EventLine, InterestedLine
@@ -147,8 +149,6 @@ class EnterKeyFormView(FormView):
         return super().form_valid(form)
 
 class EventDetailView(DetailView):
-    # TODO Delete Guest Buttons
-    # TODO Copy Invite Buttons (js?)
     model = Event
     template_name = "event/details.html"
 
@@ -192,6 +192,7 @@ class EventDetailView(DetailView):
 
             context['url'] = config.SITE_URL + "/event/" + str(kwargs['object'].id) + "/"
             context['eventlines'] = eventlines
+            context['detail_key'] = "dd"
 
         else: # PUBLIC
             self.template_name = "event/public_details.html"
@@ -263,7 +264,6 @@ class EventDetailRespondView(FormView, DetailView):
         print("RESPONSE", data['is_going'])
         event_line.state = data['is_going']
         event_line.save(force_update=True)
-        
         return super().form_valid(form)
 
     def get_success_url(self, *args, **kwargs):
@@ -290,8 +290,17 @@ class PublicEventRespondView(FormView, DetailView):
             return redirect("event_public_detail", pk, self.get_object().event_key)
         else:
             #+1 To Daily Views
+            self.form_class = PublicInviteForm
             model_functions.increment_event_view(pk)
             return super().get(request, *args, **kwargs)
+
+    def get_form_kwargs(self, *args, **kwargs):
+        form_kwargs = super().get_form_kwargs(*args, **kwargs)
+        if self.request.user.is_authenticated:
+            form_kwargs['email'] = self.request.user.email
+        else:
+            form_kwargs['email'] = None
+        return form_kwargs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -342,22 +351,49 @@ class GuestDeleteView(RedirectView):
     """Redirect view that deletes EventLine"""
     def get(self, request, *args, **kwargs):
         print("DELETE GUEST")
-        print(args, kwargs, sep="\n")
-        invite_key = kwargs['invite_key']
-        if self.object.event_creator_id != 0:
-            if self.object.event_creator_id == self.request.user.id:
-                self.object = self.get_object(invite_key)
-                self.object.delete()
-                return redirect(Event.objects.get(id = kwargs['pk']).get_absolute_url())
-            else:
-                #Event has owner, not currently logged in
-                pass
-        else:
-            self.object = self.get_object(invite_key)
-            self.object.delete()
-            return redirect(Event.objects.get(id=kwargs['pk']).get_absolute_url())
+        print(kwargs)
 
-        return redirect("home")
+        event = Event.objects.get(id = kwargs['pk'])
+        event_line = EventLine.objects.get(event_id = event, invite_key = kwargs["invite_key"])
+
+        if event.event_creator_id > 0:
+            event_owner = User.objects.get(id=event.event_creator_id)
+            if self.request.user.id == event_owner.id:
+                delete = True
+            else:
+                delete = False
+        else:
+            delete = True
+
+        if delete:
+            event_line.delete()
+            return redirect(event.get_absolute_url())
+        else:
+            return redirect("home")
+
 
     def get_object(self, rq_invite_key):
         return EventLine.objects.get(invite_key = rq_invite_key)
+
+class DeleteEventView(FormView):
+    form_class = DeleteProfileForm
+    template_name = "event/delete_event.html"
+    success_url = ""
+
+    def form_valid(self, form, *args, **kwargs):
+        event_key = self.kwargs['pk']
+        detail_key = self.kwargs['key']
+        event = Event.objects.get(id = event_key)
+        if detail_key != event.event_key:
+            #no permission, get out
+            print("You can (not) delete")
+            self.success_url = ""
+            return redirect("home")
+        to_delete = (form['user_confirmation'].value() == "1")
+        if to_delete: #User said Yes
+            event.delete()
+            self.success_url = ""
+            return redirect("home")
+        else:
+            self.success_url = ""
+            return redirect("home")

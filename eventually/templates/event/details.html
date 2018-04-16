@@ -52,8 +52,7 @@
 				Copy URL
 			</button>
 		{% endif %}
-		<a href = "delete"><button class="btn btn-danger">Delete Event</button></a>
-		
+		<a href = "{{event.event_key}}/delete"><button class="btn btn-danger">Delete Event</button></a>
 	<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
 	<script>
 	var btn = document.getElementsByClassName('btn');

@@ -1,4 +1,5 @@
 #/accounts/models.py
+from django.urls import reverse
 
 import config, string
 from random import SystemRandom
@@ -26,10 +27,15 @@ class GuestGroup(models.Model):
         return "%s - %s" % (str(self.id), self.group_name)
         # ID - Name
 
+    def get_absolute_url(self):
+        return reverse('group_detail', args=[self.id])
+
+
 class GroupLine(models.Model):
     """Define abstract table to link Guests to Groups"""
     group_id = models.ForeignKey(GuestGroup, on_delete = models.CASCADE)
     guest_id = models.ForeignKey(Guest, on_delete = models.CASCADE)
+    group_line_key =  models.CharField(default = generate_key, max_length = config.EVENT_KEY_LENGTH)
 
     def __str__(self):
         """Overwrites the models string return to make admin view pretty"""

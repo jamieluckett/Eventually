@@ -3,19 +3,18 @@
 {% extends 'base.html' %}
 <html>
 	{% block content %}
-        <title>Eventually - Delete Profile</title>
+        <title>Eventually - Delete Event</title>
 		<div class="alert alert-danger alert-dismissible fade show" role="alert">
-			<strong>Deleting your account is permanent</strong>, meaning it and all the Events and Groups tied to it will disappear, forever!
+			<strong>Deleting an event is permanent!</strong>, meaning it will disappear, forever!
   			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
     			<span aria-hidden="true">&times;</span>
  			 </button>
 		</div>
-		<h2>Delete User</h2>
+		<h2>Delete Event</h2>
 		<form method="post" >
 			{% csrf_token %}
 			{{form.user_confirmation}}
 			<button class="btn btn-danger ml-2" type="submit">Confirm</button>
-			<a href="" class="btn btn-success ml-2">Go back!</a>
 		</form>
 	{% endblock %}
 </html>
