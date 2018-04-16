@@ -10,27 +10,38 @@
 	<p><b>Email</b> - {{ user.email }}</p>
 
 	<h3>Groups</h3><hr>
-	<ul>
-	{% for group in groups %}
-		<li><a href="{% url 'group_detail' group.pk %}">{{ group.group_name }}</a></li>
-	{% endfor %}
-	</ul>
+	{% if public_events|length == 0%}
+		<ul><li>No Groups! - <a href="/accounts/profile/groups/new">Create One?</a></li></ul>
+	{% else %}
+		<ul>
+		{% for group in groups %}
+			<li><a href="{% url 'group_detail' group.pk %}">{{ group.group_name }}</a></li>
+		{% endfor %}
+		</ul>
+	{% endif %}
 
 	<h3>Public Events</h3><hr>
-
-	<ul>
-	{% for event in public_events %}
-		<li><a href="{% url 'event_detail' event.pk event.event_key %}">{{ event.event_name }}</a>
-			- <a href="analytics/{{event.pk}}">Analytics</a></li>
-	{% endfor %}
-	</ul>
+	{% if public_events|length == 0%}
+		<ul><li>No Events! - <a href="/event/new_public">Create One?</a></li></ul>
+	{% else %}
+		<ul>
+		{% for event in public_events %}
+			<li><a href="{% url 'event_detail' event.pk event.event_key %}">{{ event.event_name }}</a>
+				- <a href="analytics/{{event.pk}}">Analytics</a></li>
+		{% endfor %}
+		</ul>
+	{% endif %}
 
 	<h3>Private Events</h3><hr>
-	<ul>
-	{% for event in private_events %}
-		<li><a href="{% url 'event_detail' event.pk event.event_key %}">{{ event.event_name }}</a></li>
-	{% endfor %}
-	</ul>
+	{% if private_events|length == 0%}
+		<ul><li>No Events! - <a href="/event/new">Create One?</a></li></ul>
+	{% else %}
+		<ul>
+		{% for event in private_events %}
+			<li><a href="{% url 'event_detail' event.pk event.event_key %}">{{ event.event_name }}</a></li>
+		{% endfor %}
+		</ul>
+	{% endif %}
 
 	<div>
 		<a href = "../password_change"><button class="btn btn-primary">Change Password</button></a>
