@@ -26,13 +26,14 @@
 		<p><b>Guest List:</b></p>
 		{% for g in guests %}
 			<b><p class =
-				{% if g.seen and g.going %} "seen-going-guest"
-				{% elif g.seen %} "seen-guest"
-				{% elif g.going %} "going-guest"
+				{% if g.seen and g.state == 2 %} "seen-going-guest"
+				{% elif g.seen and g.state == 1 %} "seen-maybe-guest"
+				{% elif g.seen and g.state == 0 %} "seen-not-going-guest"
 				{% else %} "unseen-guest" {% endif %}>{{ g.email_address }}</b> -
-				{% if g.going %} Going
+				{% if g.state == 2 %} Going
+				{% elif g.state == 1%} Maybe
 				{% else %} Not Going
-				{% endif %}/{% if g.seen %} Seen
+				{% endif %}/{% if g.state == 2 %} Seen
 				{% else %} Not Seen
 				{% endif %}
 

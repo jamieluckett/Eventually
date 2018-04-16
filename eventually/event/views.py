@@ -231,7 +231,6 @@ class EventDetailRespondView(FormView, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        print(self.get_object())
         key = self.kwargs['key']
 
         event_line_query = EventLine.objects.filter(event_id = self.get_object(), invite_key = key)
@@ -242,16 +241,11 @@ class EventDetailRespondView(FormView, DetailView):
             print("Key Correct, Belongs to Event")
             event_line_query[0].seen = True
             event_line_query[0].save(force_update=True)
-            event_line_list = list(
-                EventLine.objects.filter(event_id=self.get_object())
-            )
-            guest_list = [event_line.guest_id for event_line in event_line_list]
             guest_list = EventLine.objects.filter(event_id=self.get_object())
             context['event_lines'] = guest_list
             context['form'] = self.get_form()
             context['event_line'] = event_line_query[0]
         return context
-
 
     def post(self, request, *args, **kwargs):
         form_class = self.get_form_class()
@@ -264,21 +258,17 @@ class EventDetailRespondView(FormView, DetailView):
     def form_valid(self, form, **kwargs):
         event_line = list(EventLine.objects.filter(invite_key=kwargs['key']))[0]
         print(event_line)
-        if form.is_valid():
-            # Update EventLine
-            data = form.cleaned_data
-            user_going = bool(int(data['is_going']))
-            event_line.setGoing(user_going)
-            event_line.save(force_update=True)
-        else:
-            # This _SHOULD_ never be run
-            print("oh no")
+        # Update EventLine
+        data = form.cleaned_data
+        print("RESPONSE", data['is_going'])
+        event_line.state = data['is_going']
+        event_line.save(force_update=True)
+        
         return super().form_valid(form)
 
     def get_success_url(self, *args, **kwargs):
         """Return invitee to event page"""
         pk, key = self.kwargs['pk'], self.kwargs['key']
-        print(pk, key)
         return self.kwargs['key'] + "/redir"
 
 class PublicEventRespondView(FormView, DetailView):

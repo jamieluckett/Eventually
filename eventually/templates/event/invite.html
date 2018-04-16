@@ -20,11 +20,12 @@
 		{% for event_line in event_lines %}
 			{% with event_line.guest_id as g %}
 			<b><p class =
-				{% if event_line.seen and event_line.going %} "seen-going-guest"
-				{% elif event_line.seen %} "seen-guest"
-				{% elif event_line.going %} "going-guest"
+				{% if event_line.seen and event_line.state == 2 %} "seen-going-guest"
+				{% elif event_line.seen and event_line.state == 1 %} "seen-maybe-guest"
+				{% elif event_line.seen and event_line.state == 0 %} "seen-not-going-guest"
 				{% else %} "unseen-guest" {% endif %}>{{ g.email_address }}</b> -
-				{% if event_line.going %} Going
+				{% if event_line.state == 2 %} Going
+				{% elif event_line.state == 1 %} Maybe
 				{% else %} Not Going
 				{% endif %}/{% if event_line.seen %} Seen
 				{% else %} Not Seen
