@@ -47,7 +47,11 @@ class UserProfieView(DetailView):
 
         #Get Groups
         groups = GuestGroup.objects.filter(event_creator_id = kwargs['object'].id)
+        public_events = Event.objects.filter(event_creator_id = kwargs['object'].id, event_public = True)
+        private_events = Event.objects.filter(event_creator_id = kwargs['object'].id, event_public = False)
         context['groups'] = groups
+        context['private_events'] = private_events
+        context['public_events'] = public_events
         return context
 
 class CreateGroupView(FormView):

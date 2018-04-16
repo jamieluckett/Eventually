@@ -13,9 +13,6 @@
 			<p><b>Date Created:</b> {{ event.event_date_created }}</p>
 			<p><b>Description:</b> {{ event.event_description }}</p>
 		</div>
-{% for event_line in event_lines %}
-	{{ event_line }}<hr>
-{% endfor %}
 		<h3>Guest List</h3>
 		{% for event_line in event_lines %}
 			{% with event_line.guest_id as g %}

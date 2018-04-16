@@ -9,17 +9,25 @@
 	<p><b>Full Name</b> - {{ user.first_name }} {{ user.last_name }}</p>
 	<p><b>Email</b> - {{ user.email }}</p>
 
-	<h3>Groups<h3><hr>
+	<h3>Groups</h3><hr>
 	<ul>
 	{% for group in groups %}
 		<li><a href="{% url 'group_detail' group.pk %}">{{ group.group_name }}</a></li>
 	{% endfor %}
 	</ul>
 
-	<h3>Events</h3><hr>
+	<h3>Public Events</h3><hr>
 
 	<ul>
-	{% for event in events %}
+	{% for event in public_events %}
+		<li><a href="{% url 'event_detail' event.pk event.event_key %}">{{ event.event_name }}</a>
+			- <a href="analytics/{{event.pk}}">Analytics</a></li>
+	{% endfor %}
+	</ul>
+
+	<h3>Private Events</h3><hr>
+	<ul>
+	{% for event in private_events %}
 		<li><a href="{% url 'event_detail' event.pk event.event_key %}">{{ event.event_name }}</a></li>
 	{% endfor %}
 	</ul>
