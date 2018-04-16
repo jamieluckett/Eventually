@@ -13,11 +13,23 @@
 			<p><b>Date Created:</b> {{ event.event_date_created }}</p>
 			<p><b>Description:</b> {{ event.event_description }}</p>
 		</div>
-
+{% for event_line in event_lines %}
+	{{ event_line }}<hr>
+{% endfor %}
 		<h3>Guest List</h3>
-		{% for g in guest %}
-            <b><p class = {% if g.seen and g.going%} "seen-going-guest" {%elif g.seen%} "seen-guest" {%elif g.going%} "going-guest" {%else%} "unseen-guest" {%endif%}>{{ g.email_models }}</b> -
-				{% if g.going %} Going {% else %} Not Going {% endif %}/{% if g.seen %} Seen {% else %} Not Seen {% endif %}
+		{% for event_line in event_lines %}
+			{% with event_line.guest_id as g %}
+			<b><p class =
+				{% if event_line.seen and event_line.going %} "seen-going-guest"
+				{% elif event_line.seen %} "seen-guest"
+				{% elif event_line.going %} "going-guest"
+				{% else %} "unseen-guest" {% endif %}>{{ g.email_address }}</b> -
+				{% if event_line.going %} Going
+				{% else %} Not Going
+				{% endif %}/{% if event_line.seen %} Seen
+				{% else %} Not Seen
+				{% endif %}
+			{% endwith %}
 		{% endfor %}
 
 		<hr>

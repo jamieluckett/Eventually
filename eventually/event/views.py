@@ -231,56 +231,27 @@ class EventDetailRespondView(FormView, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Passed Key is self.kwargs['key']
-        # Check Key exists + is correct
-        print("Invite Key:", self.kwargs['key'])
+        print(self.get_object())
+        key = self.kwargs['key']
 
-        sql_query = ("""SELECT *
-FROM event_event, event_eventline
-WHERE event_event.id = event_eventline.event_id_id AND event_eventline.invite_key = \"""" +
-                     str(self.kwargs['key']) + "\"").replace("\n", " ")
-        # SELECT *
-        # FROM event_event, event_eventline
-        # WHERE event_event.id = event_eventline.event_id_id
-        # AND event_eventline.invite_key = key
-
-        try:
-            # key belongs to an event
-            current_event_line = list(EventLine.objects.raw(sql_query))[0]
-            self.event_line = current_event_line
-            ##print(self.event_line)
-            if current_event_line.event_id.id != context['event'].id:
-                # Key does not belong to _this_ event
-                print("Key for incorrect event!!")
-                self.template_name = "event/incorrect_key.html"
-            else:
-                # Key is valid and belongs to this event
-                print("Key correct + belongs to this event")
-                context['event_line'] = current_event_line
-
-        except:
-            # Key is not a key for any event
-            print("Key doesn't belong to any events!! A liar!!!")
+        event_line_query = EventLine.objects.filter(event_id = self.get_object(), invite_key = key)
+        if len(event_line_query) == 0:
+            print("Incorrect Key")
             self.template_name = "event/incorrect_key.html"
-
-        # LOAD GUEST LIST
-        sql_query = ("""SELECT *
-    FROM event_guest
-    INNER JOIN event_eventline 
-    ON event_guest.id = event_eventline.guest_id_id
-    WHERE event_eventline.event_id_id = """ + str(context['object'].id)).replace("\n", " ")
-
-        # SELECT *
-        # FROM event_guest
-        # INNER JOIN event_eventline
-        # ON event_guest.id = event_eventline.guest_id_id
-        # WHERE event_eventline.event_id_id = object.id
-
-        # Select all Guest objects linked to this Event via EventLine
-        context['guest'] = Guest.objects.raw(sql_query)  # add guests to context for template to use
-        context['form'] = self.get_form()
-
+        else:
+            print("Key Correct, Belongs to Event")
+            event_line_query[0].seen = True
+            event_line_query[0].save(force_update=True)
+            event_line_list = list(
+                EventLine.objects.filter(event_id=self.get_object())
+            )
+            guest_list = [event_line.guest_id for event_line in event_line_list]
+            guest_list = EventLine.objects.filter(event_id=self.get_object())
+            context['event_lines'] = guest_list
+            context['form'] = self.get_form()
+            context['event_line'] = event_line_query[0]
         return context
+
 
     def post(self, request, *args, **kwargs):
         form_class = self.get_form_class()
