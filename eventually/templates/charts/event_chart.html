@@ -5,14 +5,47 @@
 	{% endblock %}
 
 {% block content %}
+<h1>Analytics - {{ event.event_name }}</h1>
 	<canvas id="myChart"></canvas>
+	<canvas id="doughnutChart"></canvas>
+
 	<script>
-		var ctx = document.getElementById("myChart").getContext('2d');
 		new Chart(document.getElementById("myChart"),
 			{"type":"line",
 			"data":{"labels":{{ days|safe }},
 			"datasets":[{"label":"Views","data":{{ views }},"fill":false,"borderColor":"rgb(75, 192, 192)","lineTension":0.2},
 			{"label":"Responses","data":{{ registrations }},"fill":false,"borderColor":"rgb(220, 53, 69)","lineTension":0.2}]},
-			"options":{}});</script>
+			"options":{
+				"title":{
+					"display": true,
+					"text": "Seen vs Going"
+						},
+				legend:{
+				    position:'bottom',
+					display: true,
+        				},
+				scales:{
+					xAxes: [{display: true, scaleLabel: {display: true, labelString: 'Date'}}],
+					yAxes: [{display: true, scaleLabel: {display: true, labelString: 'Quantity'}}]}
+					}
+			});
+
+		var doughtnut_data = {
+			datasets: [{
+			    data: {{ doughnut_data }},
+			backgroundColor:["rgb(86, 184, 111)", "rgb(220, 53, 69)"],
+		}], 			labels: ['Seen and Responded', 'Just Seen']
+		};
+
+		new Chart(document.getElementById("doughnutChart"),
+			{
+				type: 'doughnut',
+				data: doughtnut_data,
+				options: {				legend:{
+				    position:'bottom',
+					display: true,
+        				}}
+			});
+
 	</script>
 {% endblock %}

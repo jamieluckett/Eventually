@@ -163,4 +163,5 @@ class EventAnalyticsView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data()
         context['views'], context['registrations'], context['days'] = get_stat_list(self.get_object().id)
+        context['doughnut_data'] = [sum(context['views']), sum(context['views']) - sum(context['registrations'])]
         return context

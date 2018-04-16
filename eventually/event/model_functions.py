@@ -55,7 +55,7 @@ def get_stat_list(pk):
     print("Get Stat List")
     event = Event.objects.get(id = pk)
     stat_list = list(DailyStats.objects.filter(event_id = pk))
-    stat_list.sort(key = lambda x: x.date)
+    stat_list.sort(key = lambda x: x.date) #Sort list by DailyStats.date
 
     print("Original StatsList(len%s):" %str(len(stat_list)))
     for i in stat_list:
