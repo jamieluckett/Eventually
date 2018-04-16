@@ -12,4 +12,4 @@ The project follows standard Django file formatting, with the system comprising 
 * [Django 2.0](https://www.djangoproject.com/)
 * [Python 3.6](https://www.python.org/)
 * [chart.js](https://github.com/chartjs/Chart.js)
-
+* [Bootstrap 4.1](https://getbootstrap.com)
