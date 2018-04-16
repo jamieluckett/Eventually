@@ -10,6 +10,6 @@ The project follows standard Django file formatting, with the system comprising 
 ## Dependencies
 * [ClipboardJS](https://github.com/zenorocha/clipboard.js)
 * [Django 2.0](https://www.djangoproject.com/)
-* [Python 3.6](https://www.python.org/)
+* [Python 3.6.x](https://www.python.org/)
 * [chart.js](https://github.com/chartjs/Chart.js)
-* [Bootstrap 4.1](https://getbootstrap.com)
+* [Bootstrap 4.x](https://getbootstrap.com)
