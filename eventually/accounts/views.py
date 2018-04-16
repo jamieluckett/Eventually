@@ -33,6 +33,16 @@ class RegisterView(CreateView):
         else:
             return redirect("home")
 
+    def form_valid(self, form):
+        to_return = super(CreateView, self).form_valid(form)
+        self.object.email = form['email'].value()
+        self.object.first_name = form['first_name'].value()
+        self.object.last_name = form['last_name'].value()
+        self.object.save(force_update=True)
+
+        print("REEEEEEEEEEEEEEEEEEEEEEEEEE")
+        return to_return
+
 class UserProfieView(DetailView):
     """View used for User profiles"""
     template_name = 'user/profile.html'

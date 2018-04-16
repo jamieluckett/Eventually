@@ -27,6 +27,22 @@ class DeleteProfileForm(forms.Form):
 class UserRegisterForm(UserCreationForm):
     """Form for users to Register
     Identical to UserCreationForm but can be styled"""
+
+    first_name = forms.CharField(label = "First Name",
+                                 max_length=config.GUEST_FIRSTNAME_LENGTH,
+								 widget = forms.widgets.TextInput(attrs={'class': 'form-control'}),
+                                 required=True)
+
+    last_name = forms.CharField(label="Last Name",
+                                 max_length=config.GUEST_FIRSTNAME_LENGTH,
+                                 widget=forms.widgets.TextInput(attrs={'class': 'form-control'}),
+                                 required=True)
+
+    email = forms.EmailField(label="Email Address",
+                                 max_length=config.GUEST_FIRSTNAME_LENGTH,
+                                 widget=forms.widgets.EmailInput(attrs={'class': 'form-control'}),
+                                 required=True)
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['password1'].widget.attrs.update({'class': 'form-control'})

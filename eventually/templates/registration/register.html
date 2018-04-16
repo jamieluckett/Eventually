@@ -3,10 +3,50 @@
 
 {% block content %}
 	<title>Eventually - Register Account</title>
-	<h2>Sign up</h2>
+	<h3>Sign up</h3><hr>
 	<form method="post">
 		{% csrf_token %}
-		{{ form.as_p }}
+		<p>
+			<label for="{{form.username.label}}">Username</label>
+			{{form.username}}
+			<span class="helptext">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</span>
+		</p>
+
+		<p>
+			<label for="{{form.first_name.label}}">First Name</label>
+			{{form.first_name}}
+		</p>
+
+		<p>
+			<label for="{{form.last_name.label}}">Surname</label>
+			{{form.last_name}}
+		</p>
+
+		<p>
+			<label for="{{form.email.label}}">Email Address</label>
+			{{form.email}}
+		</p>
+
+		<p>
+			<label for="{{form.password1.label}}">Password</label>
+			{{form.password1}}
+			<span class="helptext">
+				<ul>
+					<li>Your password can&#39;t be too similar to your other personal information.</li>
+					<li>Your password must contain at least 8 characters.</li>
+					<li>Your password can&#39;t be a commonly used password.</li>
+					<li>Your password can&#39;t be entirely numeric.</li>
+				</ul>
+			</span>
+		</p>
+
+		<p>
+			<label for="{{form.password2.label}}">Password Confirmation</label>
+			{{form.password2}}
+			<span class="helptext">Enter the same password as before, for verification.</span>
+		</p>
+
+
 		<button class="btn btn-primary ml-2" type="submit">Register</button>
 	</form>
 {% endblock %}
