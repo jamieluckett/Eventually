@@ -4,7 +4,7 @@ import os
 import django
 from django.utils import timezone
 from eventually.wsgi import application
-from event.models import Guest, DailyStats, Event
+from event.models import Guest, DailyStats, Event, InterestedLine
 
 
 def get_guest(query_email_address):
@@ -20,6 +20,7 @@ def get_guest(query_email_address):
         new_guest.email_address = query_email_address
         new_guest.save()
         return new_guest
+
 
 def increment_event_view(pk):
     filter = DailyStats.objects.filter(event_id = pk, date = timezone.now())

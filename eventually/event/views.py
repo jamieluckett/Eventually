@@ -55,8 +55,8 @@ class NewEventView(FormView):
         new_event.save()  # save event to db
 
         # emails
-        email_list = form['event_guests'].value().replace("\n", "").replace("\r", "").replace(' ',
-                                                                                              '')  # remove spaces + \r\n
+        email_list = form['event_guests'].value().replace("\n", "").replace("\r", "").replace(' ', '')  # remove spaces + \r\n
+        email_list = email_list.lower()
         email_list = email_list.split(',')  # create list
         # print("emails:", valid_emails)
 
@@ -319,13 +319,16 @@ class PublicEventRespondView(FormView, DetailView):
     def form_valid(self, form, **kwargs):
         print("Recieved form input")
         print(form['response_email'].value())
-        email_address = form['response_email'].value()
+        email_address = form['response_email'].value().lower()
 
-        new_interested_line = InterestedLine()
-        new_interested_line.guest_id = model_functions.get_guest(email_address)
-        new_interested_line.event_id = self.get_object()
-        new_interested_line.save()
-        model_functions.increment_stat_register(self.get_object().id)
+        guest = model_functions.get_guest(email_address)
+        query = InterestedLine.objects.filter(event_id = self.get_object(), guest_id = guest)
+        if len(query) == 0:
+            new_interested_line = InterestedLine()
+            new_interested_line.guest_id = guest
+            new_interested_line.event_id = self.get_object()
+            new_interested_line.save()
+            model_functions.increment_stat_register(self.get_object().id)
         return HttpResponseRedirect(self.success_url)
 
 class EventClaimView(RedirectView):

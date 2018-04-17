@@ -92,7 +92,7 @@ class CreateGroupView(FormView):
         new_group.save()
 
         #Get Emails from Form
-        email_string = form['group_guests'].value()
+        email_string = form['group_guests'].value().lower()
         email_string = email_string.replace("\n", "")
         email_string = email_string.replace("\r", "")
         email_string = email_string.replace(" ", "")
