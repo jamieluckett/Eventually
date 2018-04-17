@@ -34,6 +34,7 @@ class Event(models.Model):
     event_state = models.IntegerField(default=0, help_text="0 - Open, 1 - Paused, 2 - Closed")
     event_paused = models.BooleanField(default=False)
     event_closed = models.BooleanField(default=False)
+    by_staff = models.BooleanField(default=False)
 
     def __str__(self):
         """Overwrites the models string return to make admin view pretty"""

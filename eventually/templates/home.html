@@ -8,10 +8,18 @@
 	<p></p>
 		<img src="{% static "img/logo.png"%}" style width=60%>
 		<h2>Public Event List</h2>
-	<hr>
+	<h4>By Staff</h4><hr>
 		<ul>
 			{% for event in object_list %}
-				{% if event.event_public and not event.event_paused and not event.event_closed %}
+				{% if event.by_staff and event.event_public and not event.event_paused and not event.event_closed %}
+					<li><a href="{% url 'event_public_invite' event.pk %}">{{ event.event_name }}</a></li>
+				{% endif %}
+			{% endfor %}
+		</ul>
+	<h4>By Other Users</h4><hr>
+		<ul>
+			{% for event in object_list %}
+				{% if not event.by_staff and event.event_public and not event.event_paused and not event.event_closed %}
 					<li><a href="{% url 'event_public_invite' event.pk %}">{{ event.event_name }}</a></li>
 				{% endif %}
 			{% endfor %}

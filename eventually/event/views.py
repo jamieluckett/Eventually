@@ -134,6 +134,7 @@ class PublicEventCreateView(FormView):
         new_event.event_description = form['event_description'].value()
         new_event.maximum_guests = int(form['event_max_guests'].value())
         new_event.event_creator_id = self.request.user.id
+        new_event.by_staff = self.request.user.is_staff
         new_event.save()
         self.success_url = new_event.get_absolute_url()
 
