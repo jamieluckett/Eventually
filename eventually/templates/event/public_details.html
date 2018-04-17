@@ -7,15 +7,14 @@
 		<title>Eventually - {{ event.event_name }} (Details)</title>
 
 		<div>
+
+			{% if not event.event_paused and not event.event_closed %} <!– Open –>
 			<div class="alert alert-primary alert-dismissible fade show" role="alert">
 				<strong>This event is public</strong>, it is currently visable on the home page to all users.
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				 </button>
 			</div>
-
-			{% if event.event_state == 0 %} <!– Open –>
-
 			<div class="alert alert-success alert-dismissible fade show" role="alert">
 				<strong>This event is open</strong>, it is still taking responses.
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -23,7 +22,7 @@
 				 </button>
 			</div>
 
-			{% elif event.event_state == 1 %} <!– Paused –>
+			{% elif event.event_paused %} <!– Paused –>
 
 			<div class="alert alert-warning alert-dismissible fade show" role="alert">
 				<strong>This event is paused</strong>, it is not currently taking responses.
@@ -32,7 +31,7 @@
 				 </button>
 			</div>
 
-			{% elif event.event_state == 2 %} <!– Closed –>
+			{% elif event.event_closed %} <!– Closed –>
 
 			<div class="alert alert-danger alert-dismissible fade show" role="alert">
 				<strong>This event is closed</strong>, it will not currently take further responses.
@@ -63,18 +62,15 @@
 
 		<hr>
 		<div>
-			{% if event.event_state == 0 %} <!– Open –>
-				<button class="btn btn-success" disabled>Open Event</button>
-				<button class="btn btn-warning">Pause Event</button>
-				<button class="btn btn-danger">Close Event</button>
-			{% elif event.event_state == 1 %} <!– Paused –>
-				<button class="btn btn-success">Open Event</button>
-				<button class="btn btn-warning" disabled>Pause Event</button>
-				<button class="btn btn-danger">Close Event</button>
-			{% elif event.event_state == 2 %} <!– Closed –>
-				<button class="btn btn-success">Open Event</button>
-				<button class="btn btn-warning">Pause Event</button>
-				<button class="btn btn-danger" disabled>Close Event</button>
+			{% if not event.event_paused and not event.event_closed %} <!– Open –>
+				<a href="" class="btn btn-success disabled">Open Event</a>
+				<a href="{{detail_key}}/pause" class="btn btn-warning">Pause Event</a>
+				<a href="{{detail_key}}/close" class="btn btn-danger">Close Event</a>
+			{% elif event.event_paused %} <!– Paused –>
+				<a href="{{detail_key}}/open" class="btn btn-success">Open Event</a>
+				<a href="{{detail_key}}/pause" class="btn btn-warning disabled">Pause Event</a>
+				<a href="{{detail_key}}/close" class="btn btn-danger">Close Event</a>
+			{% elif  event.event_closed %} <!– Closed –>
 			{% endif %}
 		</div> <!– Buttons –>
 	{% endblock %}

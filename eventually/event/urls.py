@@ -22,6 +22,7 @@ urlpatterns = [
 
     path('event/public/<int:pk>/', views.PublicEventRespondView.as_view(), name='event_public_invite'),
     path('event/public/<int:pk>/detail/<str:key>', views.PublicEventDetailView.as_view(), name='event_public_detail'),
+    path('event/public/<int:pk>/detail/<str:key>/<str:command>/', views.OpenPauseCloseEventView.as_view(), name='change_state_event'),
 
     path('event/key', views.EnterKeyFormView.as_view(), name='key_enter'),
 

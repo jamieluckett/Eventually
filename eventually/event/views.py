@@ -219,6 +219,8 @@ class PublicEventDetailView(DetailView):
         context = super(DetailView, self).get_context_data()
         interested_lines = list(InterestedLine.objects.filter(event_id = self.get_object()))
         context['interested_lines'] = interested_lines
+        context['detail_key'] = self.kwargs['key']
+
         return context
 
 class EventDetailRespondView(FormView, DetailView):
@@ -408,3 +410,28 @@ class DeleteEventView(FormView):
         else:
             self.success_url = ""
             return redirect("home")
+
+class OpenPauseCloseEventView(RedirectView):
+    def get(self, request, *args, **kwargs):
+        print(args, kwargs)
+        event = Event.objects.get(id = kwargs['pk'])
+        if event.event_key != kwargs['key']:
+            #key wrong
+            return redirect("home")
+        elif event.event_creator_id != request.user.id:
+            #user wrong
+            return redirect("home")
+        else:
+            if kwargs['command'] == 'open':
+                event.event_paused = False
+                event.event_closed = False
+            elif kwargs['command'] == 'pause':
+                event.event_paused = True
+                event.event_closed = False
+            elif kwargs['command'] == "close":
+                event.event_paused = False
+                event.event_closed = True
+            else:
+                return redirect("home")
+        event.save(force_update=True)
+        return redirect(event.get_absolute_url())
