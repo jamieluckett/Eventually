@@ -18,6 +18,11 @@ class EditGroupForm(forms.Form):
     """Form for users to enter groups"""
     key = forms.CharField(label='Enter Guests (csv)', max_length=3000)
 
+class AddMembers(forms.Form):
+    emails = forms.CharField(label = 'Event Guests (csv)',
+                                   max_length = config.EVENT_MAX_GUESTS*config.GUEST_EMAIL_LENGTH,
+                                   widget=forms.widgets.Textarea(attrs={'class': 'form-control'}))
+
 class DeleteProfileForm(forms.Form):
     """Form for users to delete account"""
     user_confirmation = forms.ChoiceField(label = "Are you sure you want to delete your account?",
@@ -56,3 +61,4 @@ class CustomAuthenticationForm(AuthenticationForm):
         super().__init__(*args, **kwargs)
         self.fields['username'].widget.attrs.update({'class': 'form-control'})
         self.fields['password'].widget.attrs.update({'class': 'form-control'})
+

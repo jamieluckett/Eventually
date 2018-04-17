@@ -7,7 +7,8 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, FormView, CreateView, RedirectView
 
-from accounts.forms import EditGroupForm, CreateGroupForm, UserRegisterForm, CustomAuthenticationForm, DeleteProfileForm
+from accounts.forms import EditGroupForm, CreateGroupForm, UserRegisterForm, CustomAuthenticationForm, \
+    DeleteProfileForm, AddMembers
 from accounts.models import GuestGroup, GroupLine
 from event.model_functions import get_guest, get_stat_list
 from event.models import Event
@@ -238,3 +239,29 @@ class DeleteGroupView(FormView):
         else:
             self.success_url = ""
             return redirect("home")
+
+class AddGroupGuestView(FormView):
+    form_class = AddMembers
+    template_name = "user/group_edit.html"
+
+    def form_valid(self, form, *args, **kwargs):
+        pk = self.kwargs['pk']
+        group = GuestGroup.objects.get(id=pk)
+        email_string = form['emails'].value().lower()
+        email_string = email_string.replace("\n", "")
+        email_string = email_string.replace("\r", "")
+        email_string = email_string.replace(" ", "")
+        emails = email_string.split(",")
+
+        for address in emails:
+            if is_email(address):
+                guest = get_guest(address)
+                query = GroupLine.objects.filter(guest_id = guest, group_id = group)
+                if len(query) == 0:
+                    new_group_line = GroupLine(guest_id = guest,
+                                               group_id = group)
+                    new_group_line.save()
+                else:
+                    pass
+
+        return redirect(group.get_absolute_url())

@@ -5,9 +5,10 @@ from django.shortcuts import redirect
 from django.views.generic import ListView, FormView, DetailView, CreateView, RedirectView
 from django.core.validators import validate_email
 
-from accounts.forms import DeleteProfileForm
+from accounts.forms import DeleteProfileForm, AddMembers
 from accounts.models import GuestGroup, GroupLine
 from event import model_functions
+from event.model_functions import get_guest
 from .models import Event, Guest, EventLine, InterestedLine
 from .forms import *
 from datetime import datetime
@@ -320,15 +321,15 @@ class PublicEventRespondView(FormView, DetailView):
         print("Recieved form input")
         print(form['response_email'].value())
         email_address = form['response_email'].value().lower()
-
-        guest = model_functions.get_guest(email_address)
-        query = InterestedLine.objects.filter(event_id = self.get_object(), guest_id = guest)
-        if len(query) == 0:
-            new_interested_line = InterestedLine()
-            new_interested_line.guest_id = guest
-            new_interested_line.event_id = self.get_object()
-            new_interested_line.save()
-            model_functions.increment_stat_register(self.get_object().id)
+        if is_email(email_address):
+            guest = model_functions.get_guest(email_address)
+            query = InterestedLine.objects.filter(event_id = self.get_object(), guest_id = guest)
+            if len(query) == 0:
+                new_interested_line = InterestedLine()
+                new_interested_line.guest_id = guest
+                new_interested_line.event_id = self.get_object()
+                new_interested_line.save()
+                model_functions.increment_stat_register(self.get_object().id)
         return HttpResponseRedirect(self.success_url)
 
 class EventClaimView(RedirectView):
@@ -437,4 +438,36 @@ class OpenPauseCloseEventView(RedirectView):
             else:
                 return redirect("home")
         event.save(force_update=True)
+        return redirect(event.get_absolute_url())
+
+class AddEventGuest(FormView):
+    form_class = AddMembers
+    template_name = "event/edit.html"
+
+    def form_valid(self, form, *args, **kwargs):
+        pk = self.kwargs['pk']
+        key = self.kwargs['key']
+        event = Event.objects.get(id=pk)
+        if event.event_key != key:
+            return redirect("home")
+        elif event.event_creator_id != 0 and event.event_creator_id != self.request.user.id:
+            return redirect("home")
+        else:
+            email_string = form['emails'].value().lower()
+            email_string = email_string.replace("\n", "")
+            email_string = email_string.replace("\r", "")
+            email_string = email_string.replace(" ", "")
+            emails = email_string.split(",")
+
+            for address in emails:
+                if is_email(address):
+                    guest = get_guest(address)
+                    query = EventLine.objects.filter(guest_id = guest, event_id = event)
+                    if len(query) == 0:
+                        new_event_line = EventLine(guest_id = guest,
+                                                   event_id = event)
+                        new_event_line.save()
+                    else:
+                        pass
+
         return redirect(event.get_absolute_url())

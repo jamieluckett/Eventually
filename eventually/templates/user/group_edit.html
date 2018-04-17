@@ -1,0 +1,15 @@
+<!-- \templates\new.html -->
+
+{% extends 'base.html' %}
+<html>
+	{% block content %}
+		<title>Eventually - Group (Add Members)</title>
+		<h1>Add Members to Group</h1>
+		<hr>
+		<form method="post" >
+			{% csrf_token %}
+			{{form.as_p}}
+			<button class="btn btn-success ml-2" type="submit">Save</button>
+		</form>
+	{% endblock %}
+</html>

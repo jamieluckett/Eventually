@@ -15,6 +15,7 @@ urlpatterns = [
     path('event/new_public', views.PublicEventCreateView.as_view(), name='new_public_event'),
 
     path('event/<int:pk>/detail/claim', views.EventClaimView.as_view(), name='event_claim'),
+    path('event/<int:pk>/detail/<str:key>/add', views.AddEventGuest.as_view(), name='event_add_guest'),
     path('event/<int:pk>/detail/<str:key>/delete/', views.DeleteEventView.as_view(), name='delete_event'),
     path('event/<int:pk>/detail/<str:key>/delete/<str:invite_key>', views.GuestDeleteView.as_view(), name='delete_guest'),
     path('event/<int:pk>/detail/<str:key>', views.EventDetailView.as_view(), name='event_detail'),
