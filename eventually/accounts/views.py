@@ -123,8 +123,13 @@ class GroupDetailView(DetailView):
     def get(self, request, *args, **kwargs):
         pk = kwargs['pk']
         self.object = self.get_object(pk)
-        context = self.get_context_data(object=self.object)
-        return self.render_to_response(context)
+        if not request.user.is_authenticated:
+            return redirect("home")
+        elif self.object.event_creator_id != request.user.id:
+            return redirect("home")
+        else:
+            context = self.get_context_data(object=self.object)
+            return self.render_to_response(context)
 
     def get_object(self, pk):
         return GuestGroup.objects.filter(id = pk)[0]
@@ -212,6 +217,14 @@ class DeleteGroupView(FormView):
     form_class = DeleteProfileForm
     template_name = "user/delete_group.html"
     success_url = ""
+
+    def get(self, *args, **kwargs):
+        group = GuestGroup.objects.get(id=self.kwargs['pk'])
+        print(group.event_creator_id, self.request.user.id)
+        if group.event_creator_id == self.request.user.id:
+            return super().get(args, kwargs)
+        else:
+            return redirect("home")
 
     def form_valid(self, form, *args, **kwargs):
         pk = self.kwargs['pk']

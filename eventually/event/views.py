@@ -380,11 +380,22 @@ class DeleteEventView(FormView):
     template_name = "event/delete_event.html"
     success_url = ""
 
+    def get(self, *args, **kwargs):
+        event = Event.objects.get(id=self.kwargs['pk'])
+        print(event.event_creator_id, self.request.user.id)
+        if event.event_key == kwargs['key']:
+            if self.request.user.id == event.event_creator_id or (event.event_creator_id == 0 and not self.request.user.is_authenticated):
+                return super().get(args,kwargs)
+            else:
+                return redirect("home")
+        else:
+            return redirect("home")
+
     def form_valid(self, form, *args, **kwargs):
         event_key = self.kwargs['pk']
         detail_key = self.kwargs['key']
         event = Event.objects.get(id = event_key)
-        if detail_key != event.event_key:
+        if detail_key != event.event_key :
             #no permission, get out
             print("You can (not) delete")
             self.success_url = ""
