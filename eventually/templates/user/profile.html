@@ -10,7 +10,7 @@
 	<p><b>Email</b> - {{ user.email }}</p>
 
 	<h3>Groups</h3><hr>
-	{% if public_events|length == 0%}
+	{% if groups|length == 0%}
 		<ul><li>No Groups! - <a href="/accounts/profile/groups/new">Create One?</a></li></ul>
 	{% else %}
 		<ul>
