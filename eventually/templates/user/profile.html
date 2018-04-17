@@ -26,7 +26,7 @@
 	{% else %}
 		<ul>
 		{% for event in public_events %}
-			<li><a href="{% url 'event_detail' event.pk event.event_key %}">{{ event.event_name }}</a>
+			<li><a href="{% url 'event_public_invite' event.pk %}">{{ event.event_name }}</a>
 				- <a href="analytics/{{event.pk}}">Analytics</a></li>
 		{% endfor %}
 		</ul>

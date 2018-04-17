@@ -22,7 +22,11 @@
 			<ul>
 			{% for event in object_list %}
 				{% if event.event_creator_id == user.id %}
-					<li><a href="{% url 'event_detail' event.pk event.event_key%}">{{ event.event_name }}</a></li>
+					{% if event.event_public %}
+						<li><a href="{% url 'event_public_invite' event.pk %}">{{ event.event_name }}</a></li>
+					{% else %}
+						<li><a href="{% url 'event_public_detail' event.pk event.event_key%}">{{ event.event_name }}</a></li>
+					{% endif %}
 				{% endif %}
 			{% endfor %}
 			</ul>
